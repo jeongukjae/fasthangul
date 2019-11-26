@@ -6,7 +6,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # files
 set(SOURCE_CODE
-      fasthangul/PythonExtension.cc)
+      fasthangul/PythonExtension.hh
+      fasthangul/PythonExtension.cc
+      fasthangul/jamo.hh
+      fasthangul/jamo.cc)
+set(TEST_CODE
+      tests/test_jamo.cc)
 
 # includes
 include(./cmake/Python.cmake)

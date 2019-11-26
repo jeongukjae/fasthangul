@@ -1,6 +1,3 @@
-set(TEST_CODE
-      tests/test_main.cc)
-
 option(BUILD_TEST "Build the tests" ON)
 
 if(BUILD_TEST)
