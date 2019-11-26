@@ -1,8 +1,10 @@
 #include "jamo.hh"
 #include "PythonExtension.hh"
+#include <algorithm>
 #include <numeric>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 static const wchar_t CHOSUNG[] = {L'ㄱ', L'ㄲ', L'ㄴ', L'ㄷ',
                                   L'ㄸ', L'ㄹ', L'ㅁ', L'ㅂ',
@@ -31,21 +33,18 @@ void initializePrecomputedJamos();
 
 std::wstring decompose(std::wstring_view hangul)
 {
-  if (PRECOMPUTED_JAMOS.size() == 0)
-    initializePrecomputedJamos();
-
-  std::wstring stringToReturn = std::transform_reduce(
+  std::vector<std::wstring> stringsToJoin(hangul.size());
+  std::transform(
       hangul.begin(),
       hangul.end(),
-      std::wstring{},
-      std::plus<>(),
+      stringsToJoin.begin(),
       [](const wchar_t character) {
         if (character >= FIRST_HANGUL and character <= LAST_HANGUL)
           return PRECOMPUTED_JAMOS[character];
         return std::wstring{character};
       });
 
-  return stringToReturn;
+  return std::accumulate(stringsToJoin.begin(), stringsToJoin.end(), std::wstring{});
 }
 
 void initializePrecomputedJamos()
