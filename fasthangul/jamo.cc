@@ -34,6 +34,7 @@ void initializePrecomputedJamos();
 std::wstring decompose(std::wstring_view hangul)
 {
   std::vector<std::wstring> stringsToJoin(hangul.size());
+  std::vector<int> totalLength(hangul.size());
   std::transform(
       hangul.begin(),
       hangul.end(),
@@ -44,7 +45,18 @@ std::wstring decompose(std::wstring_view hangul)
         return std::wstring{character};
       });
 
-  return std::accumulate(stringsToJoin.begin(), stringsToJoin.end(), std::wstring{});
+  std::transform(
+      stringsToJoin.begin(),
+      stringsToJoin.end(),
+      totalLength.begin(),
+      [](const std::wstring str) { return str.length(); });
+
+  std::wstring resultString{};
+  resultString.reserve(std::accumulate(totalLength.begin(), totalLength.end(), 0));
+  for (auto iter = stringsToJoin.begin(); iter != stringsToJoin.end(); ++iter)
+    resultString.append(*iter);
+
+  return resultString;
 }
 
 void initializePrecomputedJamos()
