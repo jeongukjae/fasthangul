@@ -1,0 +1,15 @@
+name: Run Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: git pull submodules
+        run: git submodule update --init --recursive
+      - name: setup cmake
+        run: mkdir build && cd build && cmake .. -GNinja
+      - name: run tests
+        run: cd build && ninja && ./run-test
