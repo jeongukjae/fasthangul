@@ -10,9 +10,21 @@ fasthangul_jamo = Extension(
 setup(
     name="fasthangul",
     version="1.0.0a0",
-    packages=['fasthangul'],
+    python_requires=">=3.5",
+    packages=["fasthangul"],
     ext_modules=[fasthangul_jamo],
     url="https://github.com/jeongukjae/fasthangul",
     author="Jeong Ukjae",
     author_email="jeongukjae@gmail.com",
+    classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: Korean",
+        "Programming Language :: C++",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: Implementation :: CPython",
+    ],
 )
