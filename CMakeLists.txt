@@ -10,7 +10,7 @@ set(SOURCE_CODE
       fasthangul/jamo.hh
       fasthangul/jamo.cc)
 set(TEST_CODE
-      tests/test_jamo.cc)
+      tests/extension_test_jamo.cc)
 
 # includes
 include(./cmake/Python.cmake)

@@ -2,7 +2,7 @@ import random
 import string
 import time
 
-from fasthangul import compose, decompose
+from fasthangul.jamo import compose, decompose
 
 N_SENTENCES = 10000
 MIN_WORD_LENGTH = 500
