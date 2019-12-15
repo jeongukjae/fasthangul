@@ -9,7 +9,7 @@ fasthangul_jamo = Extension(
 
 setup(
     name="fasthangul",
-    version="1.0.0a0",
+    version="1.0.0a1",
     python_requires=">=3.5",
     packages=["fasthangul"],
     ext_modules=[fasthangul_jamo],
