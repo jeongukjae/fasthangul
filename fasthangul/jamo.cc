@@ -2,6 +2,7 @@
 #include "PythonExtension.hh"
 #include <algorithm>
 #include <numeric>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -23,24 +24,35 @@ static const wchar_t JONGSUNG[] = {L'\0', L'ㄱ', L'ㄲ', L'ㄳ',
                                    L'ㅁ', L'ㅂ', L'ㅄ', L'ㅅ',
                                    L'ㅆ', L'ㅇ', L'ㅈ', L'ㅊ',
                                    L'ㅋ', L'ㅌ', L'ㅍ', L'ㅎ'};
+
+static const std::set<wchar_t> CHOSUNG_SET{CHOSUNG, CHOSUNG + 19};
+static const std::set<wchar_t> JONGSUNG_SET{JONGSUNG + 1, JONGSUNG + 27};
+
 static const wchar_t FIRST_HANGUL = L'가';
 static const wchar_t LAST_HANGUL = L'힣';
+
 static std::unordered_map<wchar_t, std::wstring> PRECOMPUTED_JAMOS;
 
-std::wstring decompose(std::wstring_view hangul);
-
-std::wstring decompose(std::wstring_view hangul)
+std::wstring compose(std::wstring_view text)
 {
-  std::vector<std::wstring> stringsToJoin(hangul.size());
-  std::vector<int> totalLength(hangul.size());
+  std::wstring resultString{};
+  resultString.reserve(getLengthOfComposingText(text));
+
+  return resultString;
+}
+
+std::wstring decompose(std::wstring_view text)
+{
+  std::vector<std::wstring> stringsToJoin(text.size());
+  std::vector<int> totalLength(text.size());
   std::wstring resultString{};
 
   std::transform(
-      hangul.begin(),
-      hangul.end(),
+      text.begin(),
+      text.end(),
       stringsToJoin.begin(),
       [](const wchar_t character) {
-        if (character >= FIRST_HANGUL and character <= LAST_HANGUL)
+        if (isHangul(character))
           return PRECOMPUTED_JAMOS[character];
         return std::wstring{character};
       });
@@ -75,6 +87,53 @@ void initializePrecomputedJamos()
       PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] = std::wstring({CHOSUNG[chosungIndex],
                                                                   JUNGSUNG[jungsungIndex]});
   }
+}
+
+bool isHangul(const wchar_t character)
+{
+  return character >= FIRST_HANGUL and character <= LAST_HANGUL;
+}
+
+bool isJamo(const wchar_t character)
+{
+  return character >= L'ㄱ' and character <= L'ㅣ';
+}
+
+bool isChosung(const wchar_t character)
+{
+  return CHOSUNG_SET.find(character) != CHOSUNG_SET.end();
+}
+
+bool isJungsung(const wchar_t character)
+{
+  return character >= L'ㅏ' and character <= L'ㅣ';
+}
+
+bool isJongsung(const wchar_t character)
+{
+  return JONGSUNG_SET.find(character) != JONGSUNG_SET.end();
+}
+
+size_t getLengthOfComposingText(std::wstring_view text)
+{
+  const size_t stringLength = text.size();
+  wchar_t character;
+  size_t expectedLength = stringLength;
+
+  for (int i = 0; i < stringLength; ++i)
+  {
+    character = text.at(i);
+    if (isJungsung(character))
+    {
+      if (i != 0 and isChosung(text.at(i - 1)))
+        --expectedLength;
+      if (i <= stringLength - 2 and isJongsung(text.at(i + 1)))
+        if (i == stringLength - 2 or !isJungsung(text.at(i + 2)))
+          --expectedLength;
+    }
+  }
+
+  return expectedLength;
 }
 
 // -----------
