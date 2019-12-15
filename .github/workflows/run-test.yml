@@ -10,6 +10,6 @@ jobs:
       - name: git pull submodules
         run: git submodule update --init --recursive
       - name: setup cmake
-        run: mkdir build && cd build && cmake .. -GNinja
+        run: mkdir build && cd build && cmake ..
       - name: run tests
-        run: cd build && ninja && ./run-test
+        run: cd build && make && ./run-test
