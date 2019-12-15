@@ -1,4 +1,4 @@
-name: Run Test
+name: Test C++
 
 on: [push]
 
