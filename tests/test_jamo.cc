@@ -1,33 +1,26 @@
 #include "jamo.hh"
 #include "gtest/gtest.h"
 
+TEST(jamo, composeJamos)
+{
+  initializeJamos();
+
+  ASSERT_STREQ(compose(L"ㅇㅏㄴㄴㅕㅇ").c_str(), L"안녕");
+  ASSERT_STREQ(compose(L"ㅇㅏㄴㄴㅕㅇ  ").c_str(), L"안녕  ");
+  ASSERT_STREQ(compose(L"abcdㅇㅏㄴㄴㅕㅇ  ").c_str(), L"abcd안녕  ");
+  ASSERT_STREQ(compose(L"ㄴㅓ ㅁㅝㅎㅐ?").c_str(), L"너 뭐해?");
+  ASSERT_STREQ(compose(L"ㄴㅓ ㅎㅁㅝㅎㅐ?").c_str(), L"너 ㅎ뭐해?");
+  ASSERT_STREQ(compose(L"ㅉㅡㅎㅂㅛㅎ").c_str(), L"쯯뵿");
+}
+
 TEST(jamo, decomposeJamos)
 {
-  initializePrecomputedJamos();
+  initializeJamos();
 
   ASSERT_STREQ(decompose(L"안녕").c_str(), L"ㅇㅏㄴㄴㅕㅇ");
   ASSERT_STREQ(decompose(L"안녕  ").c_str(), L"ㅇㅏㄴㄴㅕㅇ  ");
   ASSERT_STREQ(decompose(L"abcd안녕  ").c_str(), L"abcdㅇㅏㄴㄴㅕㅇ  ");
   ASSERT_STREQ(decompose(L"너 뭐해?").c_str(), L"ㄴㅓ ㅁㅝㅎㅐ?");
-}
-
-// TEST(jamo, composeJamos)
-// {
-//   initializePrecomputedJamos();
-
-//   ASSERT_STREQ(compose(L"ㅇㅏㄴㄴㅕㅇ").c_str(), L"안녕");
-//   ASSERT_STREQ(compose(L"ㅇㅏㄴㄴㅕㅇ  ").c_str(), L"안녕  ");
-//   ASSERT_STREQ(compose(L"abcdㅇㅏㄴㄴㅕㅇ  ").c_str(), L"abcd안녕  ");
-//   ASSERT_STREQ(compose(L"ㄴㅓ ㅁㅝㅎㅐ?").c_str(), L"너 뭐해?");
-// }
-
-TEST(jamoUtils, testGetLengthOfComposingText)
-{
-  ASSERT_EQ(1, getLengthOfComposingText(std::wstring{L"ㅇㅏㄴ"}));
-  ASSERT_EQ(2, getLengthOfComposingText(std::wstring{L"ㅇㅏㄴㅕ"}));
-  ASSERT_EQ(2, getLengthOfComposingText(std::wstring{L"ㅇㅏㄴㅕㅇ"}));
-  ASSERT_EQ(4, getLengthOfComposingText(std::wstring{L"ㅇㅏㄴㄴㅕㅇ  "}));
-  ASSERT_EQ(8, getLengthOfComposingText(std::wstring{L"abcdㅇㅏㄴㄴㅕㅇ  "}));
 }
 
 TEST(jamoUtils, testIsHangul)
@@ -63,4 +56,14 @@ TEST(jamoUtils, testIsJamoLike)
   ASSERT_TRUE(isJongsung(L'ㄽ'));
   ASSERT_FALSE(isJongsung(L'ㅣ'));
   ASSERT_FALSE(isJongsung(L'ㅉ'));
+}
+
+TEST(jamoUtils, testGetOneHangulFromJamo)
+{
+  initializeJamos();
+
+  ASSERT_EQ(L'가', getOneHangulFromJamo(L'ㄱ', L'ㅏ'));
+  ASSERT_EQ(L'각', getOneHangulFromJamo(L'ㄱ', L'ㅏ', L'ㄱ'));
+  ASSERT_EQ(L'뿌', getOneHangulFromJamo(L'ㅃ', L'ㅜ'));
+  ASSERT_EQ(L'뿝', getOneHangulFromJamo(L'ㅃ', L'ㅜ', L'ㅂ'));
 }

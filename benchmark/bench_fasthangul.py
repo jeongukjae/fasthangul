@@ -1,4 +1,4 @@
-from fasthangul import decompose
+from fasthangul import compose, decompose
 import random
 import string
 import time
@@ -30,10 +30,17 @@ def main():
         f"average length: {len(''.join(sentences)) / N_SENTENCES}, "
         f"n sentences: {N_SENTENCES}"
     )
+    sentences = "".join(sentences)
 
     s = time.time()
-    decompose("".join(sentences))
+    decomposed = decompose(sentences)
     print(f"decomposition time: {time.time() - s}")
+
+    s = time.time()
+    composed = compose(decomposed)
+    print(f"composition time: {time.time() - s}")
+
+    assert composed == sentences
 
 
 if __name__ == "__main__":

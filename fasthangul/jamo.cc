@@ -26,18 +26,75 @@ static const wchar_t JONGSUNG[] = {L'\0', L'ㄱ', L'ㄲ', L'ㄳ',
                                    L'ㅋ', L'ㅌ', L'ㅍ', L'ㅎ'};
 
 static const std::set<wchar_t> CHOSUNG_SET{CHOSUNG, CHOSUNG + 19};
-static const std::set<wchar_t> JONGSUNG_SET{JONGSUNG + 1, JONGSUNG + 27};
+static const std::set<wchar_t> JONGSUNG_SET{JONGSUNG + 1, JONGSUNG + 28};
+static std::unordered_map<wchar_t, int> CHOSUNG_MAP;
+static std::unordered_map<wchar_t, int> JONGSUNG_MAP;
 
 static const wchar_t FIRST_HANGUL = L'가';
 static const wchar_t LAST_HANGUL = L'힣';
 
 static std::unordered_map<wchar_t, std::wstring> PRECOMPUTED_JAMOS;
 
+enum Composing
+{
+  C_KEEP,           // 그냥 그대로 합치는 문자
+  C_IGNORE,         // 무시하는 문자
+  C_COMPOSING,      // 중성인 경우 앞만 합칠 때
+  C_COMPOSING_BOTH, // 중성인 경우 앞 뒤 전부 합칠 때
+};
+
 std::wstring compose(std::wstring_view text)
 {
   std::wstring resultString{};
-  resultString.reserve(getLengthOfComposingText(text));
+  const size_t textLength = text.size();
 
+  Composing *composing = new Composing[textLength]{
+      C_KEEP,
+  };
+  size_t expectedLength = textLength;
+
+  wchar_t character;
+
+  for (size_t i = 0; i < textLength; ++i)
+  {
+    character = text.at(i);
+    if (isJungsung(character))
+    {
+      if (i != 0 and isChosung(text.at(i - 1)))
+      {
+        --expectedLength;
+        composing[i - 1] = C_IGNORE;
+
+        if (i <= textLength - 2 and isJongsung(text.at(i + 1)) and (i == textLength - 2 or !isJungsung(text.at(i + 2))))
+        {
+          --expectedLength;
+          composing[i + 1] = C_IGNORE;
+          composing[i] = C_COMPOSING_BOTH;
+        }
+        else
+        {
+          composing[i] = C_COMPOSING;
+        }
+      }
+    }
+  }
+
+  resultString.reserve(expectedLength);
+
+  for (size_t i = 0; i < textLength; ++i)
+  {
+    if (composing[i] == C_IGNORE)
+      continue;
+
+    if (composing[i] == C_KEEP)
+      resultString += text.at(i);
+    else if (composing[i] == C_COMPOSING)
+      resultString += getOneHangulFromJamo(text.at(i - 1), text.at(i));
+    else if (composing[i] == C_COMPOSING_BOTH)
+      resultString += getOneHangulFromJamo(text.at(i - 1), text.at(i), text.at(i + 1));
+  }
+
+  delete[] composing;
   return resultString;
 }
 
@@ -70,7 +127,7 @@ std::wstring decompose(std::wstring_view text)
   return resultString;
 }
 
-void initializePrecomputedJamos()
+void initializeJamos()
 {
   wchar_t totalHangulCount = LAST_HANGUL - FIRST_HANGUL + 1;
   for (wchar_t charIndex = 0; charIndex < totalHangulCount; ++charIndex)
@@ -86,6 +143,15 @@ void initializePrecomputedJamos()
     else
       PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] = std::wstring({CHOSUNG[chosungIndex],
                                                                   JUNGSUNG[jungsungIndex]});
+  }
+
+  for (int i = 0; i < 19; ++i)
+  {
+    CHOSUNG_MAP[CHOSUNG[i]] = i;
+  }
+  for (int i = 1; i < 28; ++i)
+  {
+    JONGSUNG_MAP[JONGSUNG[i]] = i;
   }
 }
 
@@ -114,31 +180,26 @@ bool isJongsung(const wchar_t character)
   return JONGSUNG_SET.find(character) != JONGSUNG_SET.end();
 }
 
-size_t getLengthOfComposingText(std::wstring_view text)
+wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung)
 {
-  const size_t stringLength = text.size();
-  wchar_t character;
-  size_t expectedLength = stringLength;
+  wchar_t chosungIndex = CHOSUNG_MAP[chosung];
+  wchar_t jungsungIndex = jungsung - L'ㅏ';
 
-  for (int i = 0; i < stringLength; ++i)
-  {
-    character = text.at(i);
-    if (isJungsung(character))
-    {
-      if (i != 0 and isChosung(text.at(i - 1)))
-        --expectedLength;
-      if (i <= stringLength - 2 and isJongsung(text.at(i + 1)))
-        if (i == stringLength - 2 or !isJungsung(text.at(i + 2)))
-          --expectedLength;
-    }
-  }
+  return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex);
+}
 
-  return expectedLength;
+wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung)
+{
+  wchar_t chosungIndex = CHOSUNG_MAP[chosung];
+  wchar_t jungsungIndex = jungsung - L'ㅏ';
+  wchar_t jongsungIndex = JONGSUNG_MAP[jongsung];
+
+  return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex) + jongsungIndex;
 }
 
 // -----------
 // Python Functions
-static PyObject *JAMO_compose(PyObject *args)
+static PyObject *JAMO_compose(PyObject *self, PyObject *args)
 {
   PyObject *string = NULL;
   if (!PyArg_UnpackTuple(args, "args", 1, 1, &string))
@@ -150,9 +211,14 @@ static PyObject *JAMO_compose(PyObject *args)
     return NULL;
   }
 
-  Py_INCREF(Py_None);
-  return Py_None;
+  wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
+  std::wstring composed = compose(std::wstring_view{hangulString});
+  PyObject *result = PyUnicode_FromWideChar(composed.c_str(), composed.length());
+
+  Py_INCREF(result);
+  return result;
 }
+
 static PyObject *JAMO_decompose(PyObject *self, PyObject *args)
 {
   PyObject *string = NULL;
@@ -194,7 +260,7 @@ PyMODINIT_FUNC PyInit_jamo(void)
   if (fasthangulJamo == NULL)
     return NULL;
 
-  initializePrecomputedJamos();
+  initializeJamos();
 
   return fasthangulJamo;
 }

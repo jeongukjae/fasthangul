@@ -5,7 +5,7 @@
 #include <string_view>
 #include <unordered_map>
 
-void initializePrecomputedJamos();
+void initializeJamos();
 std::wstring compose(std::wstring_view hangul);
 std::wstring decompose(std::wstring_view hangul);
 
@@ -15,6 +15,7 @@ bool isJamo(const wchar_t character);
 bool isChosung(const wchar_t character);
 bool isJungsung(const wchar_t character);
 bool isJongsung(const wchar_t character);
-size_t getLengthOfComposingText(std::wstring_view text);
+wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung);
+wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung);
 
 #endif /* __FH_JAMO_H__ */

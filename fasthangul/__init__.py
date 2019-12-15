@@ -1,3 +1,3 @@
-from .jamo import decompose
+from .jamo import compose, decompose
 
-__all__ = ["decompose"]
+__all__ = ["compose", "decompose"]
