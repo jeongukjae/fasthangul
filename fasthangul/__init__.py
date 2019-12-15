@@ -1,0 +1,1 @@
+from .jamo import decompose
