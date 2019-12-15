@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 void initializePrecomputedJamos();
+std::wstring compose(std::wstring_view hangul);
 std::wstring decompose(std::wstring_view hangul);
 
 #endif /* __FH_JAMO_H__ */

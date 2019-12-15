@@ -11,4 +11,6 @@ if(BUILD_TEST)
   add_executable(run-test ${TEST_CODE})
   target_link_libraries(run-test fasthangul)
   target_link_libraries(run-test gtest gmock gtest_main)
+
+  add_test(NAME run-test COMMAND ./run-test)
 endif()
