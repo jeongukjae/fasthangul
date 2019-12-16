@@ -91,7 +91,7 @@ std::wstring decompose(std::wstring_view text) {
   });
 
   std::transform(stringsToJoin.begin(), stringsToJoin.end(), totalLength.begin(),
-                 [](const std::wstring str) { return str.length(); });
+                 [](const std::wstring &chunk) { return chunk.length(); });
 
   resultString.reserve(std::accumulate(totalLength.begin(), totalLength.end(), 0));
   for (auto iter = stringsToJoin.begin(); iter != stringsToJoin.end(); ++iter)
