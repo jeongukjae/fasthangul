@@ -1,8 +1,7 @@
 #include "jamo.hh"
 #include "gtest/gtest.h"
 
-TEST(jamo, composeJamos)
-{
+TEST(jamo, composeJamos) {
   initializeJamos();
 
   ASSERT_STREQ(compose(L"ㅇㅏㄴㄴㅕㅇ").c_str(), L"안녕");
@@ -13,8 +12,7 @@ TEST(jamo, composeJamos)
   ASSERT_STREQ(compose(L"ㅉㅡㅎㅂㅛㅎ").c_str(), L"쯯뵿");
 }
 
-TEST(jamo, decomposeJamos)
-{
+TEST(jamo, decomposeJamos) {
   initializeJamos();
 
   ASSERT_STREQ(decompose(L"안녕").c_str(), L"ㅇㅏㄴㄴㅕㅇ");
@@ -23,8 +21,7 @@ TEST(jamo, decomposeJamos)
   ASSERT_STREQ(decompose(L"너 뭐해?").c_str(), L"ㄴㅓ ㅁㅝㅎㅐ?");
 }
 
-TEST(jamoUtils, testIsHangul)
-{
+TEST(jamoUtils, testIsHangul) {
   ASSERT_TRUE(isHangul(L'가'));
   ASSERT_TRUE(isHangul(L'힣'));
   ASSERT_TRUE(isHangul(L'와'));
@@ -33,8 +30,7 @@ TEST(jamoUtils, testIsHangul)
   ASSERT_FALSE(isHangul(L' '));
 }
 
-TEST(jamoUtils, testIsJamoLike)
-{
+TEST(jamoUtils, testIsJamoLike) {
   ASSERT_TRUE(isJamo(L'ㄱ'));
   ASSERT_TRUE(isJamo(L'ㅣ'));
   ASSERT_TRUE(isJamo(L'ㅏ'));
@@ -58,8 +54,7 @@ TEST(jamoUtils, testIsJamoLike)
   ASSERT_FALSE(isJongsung(L'ㅉ'));
 }
 
-TEST(jamoUtils, testGetOneHangulFromJamo)
-{
+TEST(jamoUtils, testGetOneHangulFromJamo) {
   initializeJamos();
 
   ASSERT_EQ(L'가', getOneHangulFromJamo(L'ㄱ', L'ㅏ'));
