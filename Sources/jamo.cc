@@ -30,7 +30,7 @@ enum Composing {
   C_COMPOSING_BOTH, // 중성인 경우 앞 뒤 전부 합칠 때
 };
 
-std::wstring compose(std::wstring_view text) {
+std::wstring fasthangul::jamo::compose(std::wstring_view text) {
   std::wstring resultString{};
   const size_t textLength = text.size();
 
@@ -76,7 +76,7 @@ std::wstring compose(std::wstring_view text) {
   return resultString;
 }
 
-std::wstring decompose(std::wstring_view text) {
+std::wstring fasthangul::jamo::decompose(std::wstring_view text) {
   std::vector<std::wstring> stringsToJoin(text.size());
   std::vector<int> totalLength(text.size());
   std::wstring resultString{};
@@ -97,7 +97,7 @@ std::wstring decompose(std::wstring_view text) {
   return resultString;
 }
 
-void initializeJamos() {
+void fasthangul::jamo::initializeJamos() {
   wchar_t totalHangulCount = LAST_HANGUL - FIRST_HANGUL + 1;
   for (wchar_t charIndex = 0; charIndex < totalHangulCount; ++charIndex) {
     wchar_t chosungIndex = charIndex / 28 / 21;
@@ -119,24 +119,28 @@ void initializeJamos() {
   }
 }
 
-bool isHangul(const wchar_t character) { return character >= FIRST_HANGUL and character <= LAST_HANGUL; }
+bool fasthangul::jamo::isHangul(const wchar_t character) {
+  return character >= FIRST_HANGUL and character <= LAST_HANGUL;
+}
 
-bool isJamo(const wchar_t character) { return character >= L'ㄱ' and character <= L'ㅣ'; }
+bool fasthangul::jamo::isJamo(const wchar_t character) { return character >= L'ㄱ' and character <= L'ㅣ'; }
 
-bool isChosung(const wchar_t character) { return CHOSUNG_SET.find(character) != CHOSUNG_SET.end(); }
+bool fasthangul::jamo::isChosung(const wchar_t character) { return CHOSUNG_SET.find(character) != CHOSUNG_SET.end(); }
 
-bool isJungsung(const wchar_t character) { return character >= L'ㅏ' and character <= L'ㅣ'; }
+bool fasthangul::jamo::isJungsung(const wchar_t character) { return character >= L'ㅏ' and character <= L'ㅣ'; }
 
-bool isJongsung(const wchar_t character) { return JONGSUNG_SET.find(character) != JONGSUNG_SET.end(); }
+bool fasthangul::jamo::isJongsung(const wchar_t character) {
+  return JONGSUNG_SET.find(character) != JONGSUNG_SET.end();
+}
 
-wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung) {
+wchar_t fasthangul::jamo::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung) {
   wchar_t chosungIndex = CHOSUNG_MAP[chosung];
   wchar_t jungsungIndex = jungsung - L'ㅏ';
 
   return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex);
 }
 
-wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung) {
+wchar_t fasthangul::jamo::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung) {
   wchar_t chosungIndex = CHOSUNG_MAP[chosung];
   wchar_t jungsungIndex = jungsung - L'ㅏ';
   wchar_t jongsungIndex = JONGSUNG_MAP[jongsung];

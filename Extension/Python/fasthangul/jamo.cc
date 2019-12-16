@@ -14,7 +14,7 @@ static PyObject *JAMO_compose(PyObject *self, PyObject *args) {
   }
 
   wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
-  std::wstring composed = compose(std::wstring_view{hangulString});
+  std::wstring composed = fasthangul::jamo::compose(std::wstring_view{hangulString});
   PyObject *result = PyUnicode_FromWideChar(composed.c_str(), composed.length());
 
   Py_INCREF(result);
@@ -32,7 +32,7 @@ static PyObject *JAMO_decompose(PyObject *self, PyObject *args) {
   }
 
   wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
-  std::wstring decomposed = decompose(std::wstring_view{hangulString});
+  std::wstring decomposed = fasthangul::jamo::decompose(std::wstring_view{hangulString});
   PyObject *result = PyUnicode_FromWideChar(decomposed.c_str(), decomposed.length());
 
   Py_INCREF(result);
@@ -53,7 +53,7 @@ PyMODINIT_FUNC PyInit_jamo(void) {
   if (fasthangulJamo == NULL)
     return NULL;
 
-  initializeJamos();
+  fasthangul::jamo::initializeJamos();
 
   return fasthangulJamo;
 }
