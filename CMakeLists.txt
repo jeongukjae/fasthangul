@@ -12,7 +12,7 @@ set(TEST_CODE
       Tests/TestJamo.cc)
 
 # includes
-include(./cmake/Testing.cmake)
+include(./Cmake/Testing.cmake)
 
 # fasthangul
 add_library(fasthangul SHARED ${SOURCE_CODE})
