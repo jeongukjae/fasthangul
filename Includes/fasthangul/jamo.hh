@@ -8,7 +8,6 @@ void initializeJamos();
 std::wstring compose(std::wstring_view hangul);
 std::wstring decompose(std::wstring_view hangul);
 
-// utils
 bool isHangul(const wchar_t character);
 bool isJamo(const wchar_t character);
 bool isChosung(const wchar_t character);

@@ -31,6 +31,7 @@ TEST(jamoUtils, testIsHangul) {
 }
 
 TEST(jamoUtils, testIsJamoLike) {
+  // is jamo
   ASSERT_TRUE(isJamo(L'ㄱ'));
   ASSERT_TRUE(isJamo(L'ㅣ'));
   ASSERT_TRUE(isJamo(L'ㅏ'));
