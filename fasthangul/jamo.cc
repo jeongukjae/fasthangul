@@ -40,10 +40,8 @@ std::wstring compose(std::wstring_view text) {
   };
   size_t expectedLength = textLength;
 
-  wchar_t character;
-
   for (size_t i = 0; i < textLength; ++i) {
-    character = text.at(i);
+    wchar_t character = text.at(i);
     if (isJungsung(character)) {
       if (i != 0 and isChosung(text.at(i - 1))) {
         --expectedLength;
