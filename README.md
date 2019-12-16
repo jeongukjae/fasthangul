@@ -12,3 +12,21 @@
 한국어 처리를 제대로, 빠르게 하기 위해 작성한 라이브러리입니다. 기능을 하나씩 추가해나갈 예정입니다.
 
 * [Python 벤치마크](./Benchmarks/Python)
+
+## Python 사용법
+
+### 설치
+
+```shell
+pip install fasthangul
+```
+
+### 자모 분리하고 합치기
+
+```python
+>>> from fasthangul.jamo import compose, decompose
+>>> decompose('안녕하세요')
+'ㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ'
+>>> compose('ㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ')
+'안녕하세요'
+```
