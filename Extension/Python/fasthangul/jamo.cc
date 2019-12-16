@@ -41,9 +41,10 @@ static PyObject *JAMO_decompose(PyObject *self, PyObject *args) {
 
 /* ------------------- */
 /* delcare Jamo Module */
-static PyMethodDef jamoMethods[] = {{"compose", (PyCFunction)JAMO_compose, METH_VARARGS, "compose"},
-                                    {"decompose", (PyCFunction)JAMO_decompose, METH_VARARGS, "decompose"},
-                                    {NULL}};
+static PyMethodDef jamoMethods[] = {
+    {"compose", (PyCFunction)JAMO_compose, METH_VARARGS, "자모를 조합하는 함수입니다."},
+    {"decompose", (PyCFunction)JAMO_decompose, METH_VARARGS, "자모를 분리하는 함수입니다."},
+    {NULL}};
 
 static PyModuleDef fasthangulJamoModule = {PyModuleDef_HEAD_INIT, "fasthangul.jamo", "", -1, jamoMethods};
 
