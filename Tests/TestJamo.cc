@@ -1,4 +1,4 @@
-#include "jamo.hh"
+#include "fasthangul/jamo.hh"
 #include "gtest/gtest.h"
 
 TEST(jamo, composeJamos) {

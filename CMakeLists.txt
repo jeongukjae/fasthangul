@@ -5,17 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # files
+include_directories(./Includes)
 set(SOURCE_CODE
-      fasthangul/PythonExtension.hh
-      fasthangul/jamo.hh
-      fasthangul/jamo.cc)
+      Sources/jamo.cc)
 set(TEST_CODE
-      tests/extension_test_jamo.cc)
+      Tests/TestJamo.cc)
 
 # includes
-include(./cmake/Python.cmake)
 include(./cmake/Testing.cmake)
 
 # fasthangul
 add_library(fasthangul SHARED ${SOURCE_CODE})
-target_link_libraries(fasthangul ${PYTHON_LIBRARIES})

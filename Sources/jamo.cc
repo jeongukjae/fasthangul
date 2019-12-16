@@ -1,5 +1,4 @@
-#include "jamo.hh"
-#include "PythonExtension.hh"
+#include "fasthangul/jamo.hh"
 #include <algorithm>
 #include <numeric>
 #include <set>
@@ -143,61 +142,4 @@ wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung
   wchar_t jongsungIndex = JONGSUNG_MAP[jongsung];
 
   return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex) + jongsungIndex;
-}
-
-// -----------
-// Python Functions
-static PyObject *JAMO_compose(PyObject *self, PyObject *args) {
-  PyObject *string = NULL;
-  if (!PyArg_UnpackTuple(args, "args", 1, 1, &string))
-    return NULL;
-
-  if (!PyUnicode_Check(string)) {
-    PyErr_SetString(PyExc_TypeError, "arg must be str type");
-    return NULL;
-  }
-
-  wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
-  std::wstring composed = compose(std::wstring_view{hangulString});
-  PyObject *result = PyUnicode_FromWideChar(composed.c_str(), composed.length());
-
-  Py_INCREF(result);
-  return result;
-}
-
-static PyObject *JAMO_decompose(PyObject *self, PyObject *args) {
-  PyObject *string = NULL;
-  if (!PyArg_UnpackTuple(args, "args", 1, 1, &string))
-    return NULL;
-
-  if (!PyUnicode_Check(string)) {
-    PyErr_SetString(PyExc_TypeError, "arg must be str type");
-    return NULL;
-  }
-
-  wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
-  std::wstring decomposed = decompose(std::wstring_view{hangulString});
-  PyObject *result = PyUnicode_FromWideChar(decomposed.c_str(), decomposed.length());
-
-  Py_INCREF(result);
-  return result;
-}
-
-/* ------------------- */
-/* delcare Jamo Module */
-static PyMethodDef jamoMethods[] = {{"compose", (PyCFunction)JAMO_compose, METH_VARARGS, "compose"},
-                                    {"decompose", (PyCFunction)JAMO_decompose, METH_VARARGS, "decompose"},
-                                    {NULL}};
-
-static PyModuleDef fasthangulJamoModule = {PyModuleDef_HEAD_INIT, "fasthangul.jamo", "", -1, jamoMethods};
-
-PyMODINIT_FUNC PyInit_jamo(void) {
-  PyObject *fasthangulJamo = PyModule_Create(&fasthangulJamoModule);
-
-  if (fasthangulJamo == NULL)
-    return NULL;
-
-  initializeJamos();
-
-  return fasthangulJamo;
 }
