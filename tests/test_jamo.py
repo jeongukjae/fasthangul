@@ -1,3 +1,6 @@
+import random
+import string
+
 from fasthangul.jamo import compose, decompose
 
 
@@ -15,3 +18,17 @@ def test_decompose():
     assert decompose("안녕  ") == "ㅇㅏㄴㄴㅕㅇ  "
     assert decompose("abcd안녕  ") == "abcdㅇㅏㄴㄴㅕㅇ  "
     assert decompose("너 뭐해?") == "ㄴㅓ ㅁㅝㅎㅐ?"
+
+
+def test_large_text():
+    letters = (
+        string.ascii_letters
+        + "".join(map(chr, range(ord("가"), ord("힣") + 1)))
+        + "          "
+    )
+
+    original_sentences = "".join(random.sample(letters, random.randint(7000, 10000)))
+    decomposed = decompose(original_sentences)
+    composed = compose(decomposed)
+
+    assert composed == original_sentences
