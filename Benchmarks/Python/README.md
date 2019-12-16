@@ -30,3 +30,6 @@ n sen | avg len | action | fasthangul | hangul toolkit | han2jamo
  1001 |     746 | comp   | 0.05779600 |       too long | 5.42228389
  1001 |     746 | decomp | 0.05095792 |       too long | 1.14258790
 ```
+
+* `comp`는 자모 조합하는 기능을 나타내고, `decomp`는 자모를 분리하는 기능을 나타냅니다.
+* `n sen * avg len`만큼의 문자열을 분리하고 조합하는 시간을 잰 결과입니다.
