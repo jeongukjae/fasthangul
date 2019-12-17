@@ -7,9 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # files
 include_directories(./Includes)
 set(SOURCE_CODE
-      Sources/jamo.cc)
+      Sources/jamo.cc
+      Sources/normalizer.cc)
 set(TEST_CODE
-      Tests/TestJamo.cc)
+      Tests/TestJamo.cc
+      Tests/TestNormalizer.cc)
 
 # includes
 include(./Cmake/Testing.cmake)
