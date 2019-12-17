@@ -8,10 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(./Includes)
 set(SOURCE_CODE
       Sources/jamo.cc
-      Sources/normalizer.cc)
+      Sources/normalizer.cc
+      Sources/tokenizer.cc)
 set(TEST_CODE
       Tests/TestJamo.cc
-      Tests/TestNormalizer.cc)
+      Tests/TestNormalizer.cc
+      Tests/TestTokenizer.cc)
 
 # includes
 include(./Cmake/Testing.cmake)
