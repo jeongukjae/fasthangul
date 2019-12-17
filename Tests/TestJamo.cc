@@ -23,7 +23,7 @@ TEST(jamo, decomposeJamos) {
   ASSERT_STREQ(decompose(L"너 뭐해?").c_str(), L"ㄴㅓ ㅁㅝㅎㅐ?");
 }
 
-TEST(jamoUtils, testIsHangul) {
+TEST(jamo, testIsHangul) {
   ASSERT_TRUE(isHangul(L'가'));
   ASSERT_TRUE(isHangul(L'힣'));
   ASSERT_TRUE(isHangul(L'와'));
@@ -32,7 +32,7 @@ TEST(jamoUtils, testIsHangul) {
   ASSERT_FALSE(isHangul(L' '));
 }
 
-TEST(jamoUtils, testIsJamoLike) {
+TEST(jamo, testIsJamoLike) {
   // is jamo
   ASSERT_TRUE(isJamo(L'ㄱ'));
   ASSERT_TRUE(isJamo(L'ㅣ'));
@@ -57,7 +57,7 @@ TEST(jamoUtils, testIsJamoLike) {
   ASSERT_FALSE(isJongsung(L'ㅉ'));
 }
 
-TEST(jamoUtils, testGetOneHangulFromJamo) {
+TEST(jamo, testGetOneHangulFromJamo) {
   initializeJamos();
 
   ASSERT_EQ(L'가', getOneHangulFromJamo(L'ㄱ', L'ㅏ'));
