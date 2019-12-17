@@ -14,6 +14,12 @@ jobs:
       - name: git pull submodules
         run: git submodule update --init --recursive
       - name: setup cmake
-        run: mkdir build && cd build && cmake ..
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DBUILD_COVERAGE=ON
       - name: run tests
-        run: cd build && make && ./run-test
+        run: |
+          cd build
+          make
+          make coverage

@@ -15,6 +15,7 @@ set(TEST_CODE
 
 # includes
 include(./Cmake/Testing.cmake)
+include(./Cmake/CodeCoverage.cmake)
 
 # fasthangul
 add_library(fasthangul SHARED ${SOURCE_CODE})
