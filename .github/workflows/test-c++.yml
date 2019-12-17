@@ -17,9 +17,9 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DBUILD_COVERAGE=ON
+          cmake .. -DBUILD_TEST=ON
       - name: run tests
         run: |
           cd build
           make
-          make coverage
+          ./run-test

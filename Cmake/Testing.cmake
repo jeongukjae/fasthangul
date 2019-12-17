@@ -1,4 +1,4 @@
-option(BUILD_TEST "Build the tests" ON)
+option(BUILD_TEST "Build the tests" OFF)
 
 if(BUILD_TEST)
   enable_testing()
