@@ -10,6 +10,10 @@ std::wstring fasthangul::normalizer::filterInvalidCharacter(std::wstring_view te
 
 std::wstring fasthangul::normalizer::normalizeWhitespace(std::wstring text) {
   std::transform(text.begin(), text.end(), text.begin(),
-                 [](const wchar_t &character) { return iswspace(character) ? L' ' : character; });
+                 [](const wchar_t &character) { return std::isspace(character) ? L' ' : character; });
+
+  // trim
+  text.erase(0, text.find_first_not_of(L' '));
+  text.erase(text.find_last_not_of(L' ') + 1);
   return text;
 }
