@@ -8,12 +8,20 @@ fasthangul_jamo = Extension(
     language="c++",
 )
 
+fasthangul_normalizer = Extension(
+    "fasthangul.normalizer",
+    sources=["../../Sources/normalizer.cc", "fasthangul/normalizer.cc",],
+    include_dirs=["../../Includes"],
+    extra_compile_args=["-std=c++17"],
+    language="c++",
+)
+
 setup(
     name="fasthangul",
     version="1.0.0a1",
     python_requires=">=3.5",
     packages=["fasthangul"],
-    ext_modules=[fasthangul_jamo],
+    ext_modules=[fasthangul_jamo, fasthangul_normalizer],
     url="https://github.com/jeongukjae/fasthangul",
     author="Jeong Ukjae",
     author_email="jeongukjae@gmail.com",
