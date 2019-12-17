@@ -7,3 +7,9 @@ std::wstring fasthangul::normalizer::filterInvalidCharacter(std::wstring_view te
                [](const wchar_t &character) { return not fasthangul::normalizer::isInvalidChar(character); });
   return cleanText;
 }
+
+std::wstring fasthangul::normalizer::normalizeWhitespace(std::wstring text) {
+  std::transform(text.begin(), text.end(), text.begin(),
+                 [](const wchar_t &character) { return iswspace(character) ? L' ' : character; });
+  return text;
+}

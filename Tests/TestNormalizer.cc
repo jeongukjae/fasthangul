@@ -4,9 +4,16 @@
 using namespace fasthangul::normalizer;
 
 TEST(normalizer, testFilterInvalidCharacter) {
-  ASSERT_STREQ(filterInvalidCharacter(L"").c_str(), L"");
   ASSERT_STREQ(filterInvalidCharacter(L"가나다라").c_str(), L"가나다라");
   ASSERT_STREQ(filterInvalidCharacter(L"가나다라\t\r\n").c_str(), L"가나다라\t\r\n");
+  ASSERT_STREQ(filterInvalidCharacter(L"some long \ntext \x01 to test").c_str(), L"some long \ntext  to test");
+}
+
+TEST(normalizer, testNormalizerWhitespace) {
+  ASSERT_STREQ(normalizeWhitespace(L"가나다라").c_str(), L"가나다라");
+  ASSERT_STREQ(normalizeWhitespace(L"가나다라\t\r\n").c_str(), L"가나다라   ");
+  ASSERT_STREQ(normalizeWhitespace(L"가나 \t \r \n다라").c_str(), L"가나      다라");
+  ASSERT_STREQ(normalizeWhitespace(L"some long \ntext to test").c_str(), L"some long  text to test");
 }
 
 TEST(normalizer, testIsControlChar) {

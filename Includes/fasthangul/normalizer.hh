@@ -7,6 +7,7 @@ namespace fasthangul {
 namespace normalizer {
 
 std::wstring filterInvalidCharacter(std::wstring_view text);
+std::wstring normalizeWhitespace(std::wstring text);
 
 inline bool isControlChar(const wchar_t character) {
   if (character == L'\n' or character == L'\r' or character == L'\t')
