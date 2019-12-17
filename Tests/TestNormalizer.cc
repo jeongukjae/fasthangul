@@ -10,14 +10,14 @@ TEST(normalizer, testFilterInvalidCharacter) {
 }
 
 TEST(normalizer, testNormalizerWhitespace) {
-  ASSERT_STREQ(normalizeWhitespace(L" \n\t\r").c_str(), L"");
-  ASSERT_STREQ(normalizeWhitespace(L"가나다라").c_str(), L"가나다라");
+  ASSERT_STREQ(normalizeWhitespace(L"안녕하세요").c_str(), L"안녕하세요");
   ASSERT_STREQ(normalizeWhitespace(L"가나다라\t\r\n마").c_str(), L"가나다라 마");
   ASSERT_STREQ(normalizeWhitespace(L"가나 \t \r \n다라").c_str(), L"가나 다라");
   ASSERT_STREQ(normalizeWhitespace(L"some long \ntext to test").c_str(), L"some long text to test");
   ASSERT_STREQ(normalizeWhitespace(L"가나다라\t\r\n").c_str(), L"가나다라");
   ASSERT_STREQ(normalizeWhitespace(L"\t\r\n가나다라\t\r\n").c_str(), L"가나다라");
   ASSERT_STREQ(normalizeWhitespace(L"  가나다라  ").c_str(), L"가나다라");
+  ASSERT_STREQ(normalizeWhitespace(L" \n\t\r").c_str(), L"");
 }
 
 TEST(normalizer, testIsControlChar) {

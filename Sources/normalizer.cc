@@ -11,7 +11,7 @@ std::wstring fasthangul::normalizer::filterInvalidCharacter(std::wstring_view te
 
 std::wstring fasthangul::normalizer::normalizeWhitespace(std::wstring text) {
   std::transform(text.begin(), text.end(), text.begin(),
-                 [](const wchar_t &character) { return std::isspace(character) ? L' ' : character; });
+                 [](const wchar_t &character) { return std::iswspace(character) ? L' ' : character; });
 
   // remove duplicated spaces
   text.erase(std::unique(text.begin(), text.end(),
