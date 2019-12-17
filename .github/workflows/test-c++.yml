@@ -39,7 +39,10 @@ jobs:
           cd build
           cmake .. -DBUILD_TEST=ON -DBUILD_COVERAGE=ON
       - name: run tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           cd build
           make
           make coverage
+          bash <(curl -s https://codecov.io/bash)
