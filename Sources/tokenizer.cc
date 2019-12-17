@@ -1,4 +1,5 @@
 #include "fasthangul/tokenizer.hh"
+#include <algorithm>
 
 std::vector<std::wstring_view> fasthangul::tokenizer::tokenizeWhitespace(std::wstring_view text) {
   std::vector<std::wstring_view> result;
