@@ -3,7 +3,7 @@ name: Test C++
 on: [push]
 
 jobs:
-  build:
+  run-test:
     name: Test C++ on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -23,3 +23,23 @@ jobs:
           cd build
           make
           ./run-test
+
+  check-coverage:
+    name: Check C++ coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: git pull submodules
+        run: git submodule update --init --recursive
+      - name: install lcov
+        run: sudo apt-get install lcov
+      - name: setup cmake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DBUILD_TEST=ON -DBUILD_COVERAGE=ON
+      - name: run tests
+        run: |
+          cd build
+          make
+          make coverage
