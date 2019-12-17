@@ -2,7 +2,7 @@
 
 ## 자모 분리, 조합 (`benchmark_jamo.py`)
 
-`iMac (Retina 5K, 27-inch, Late 2015)`, `3.2 GHz 쿼드 코어 Intel Core i5`를 기준으로 측정하였습니다.
+비교에 사용한 라이브러리는 [bluedisk/hangul-toolkit](https://github.com/bluedisk/hangul-toolkit)와 [codertimo/han2jamo](https://github.com/codertimo/han2jamo)입니다. `iMac (Retina 5K, 27-inch, Late 2015)`, `3.2 GHz 쿼드 코어 Intel Core i5`를 기준으로 측정하였습니다.
 
 ```text
 n sen | avg len | action | fasthangul | hangul toolkit | han2jamo
@@ -31,5 +31,5 @@ n sen | avg len | action | fasthangul | hangul toolkit | han2jamo
  1001 |     746 | decomp | 0.05095792 |       too long | 1.14258790
 ```
 
-* `comp`는 자모 조합하는 기능을 나타내고, `decomp`는 자모를 분리하는 기능을 나타냅니다.
-* `n sen * avg len`만큼의 문자열을 분리하고 조합하는 시간을 잰 결과입니다.
+- `comp`는 자모 조합하는 기능을 나타내고, `decomp`는 자모를 분리하는 기능을 나타냅니다.
+- `n sen * avg len`만큼의 문자열을 분리하고 조합하는 시간을 잰 결과입니다.
