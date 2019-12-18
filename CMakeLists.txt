@@ -9,11 +9,13 @@ include_directories(./Includes)
 set(SOURCE_CODE
       Sources/jamo.cc
       Sources/normalizer.cc
-      Sources/tokenizer.cc)
+      Sources/tokenizer.cc
+      Sources/vocab.cc)
 set(TEST_CODE
       Tests/TestJamo.cc
       Tests/TestNormalizer.cc
-      Tests/TestTokenizer.cc)
+      Tests/TestTokenizer.cc
+      Tests/TestVocab.cc)
 
 # includes
 include(./Cmake/Testing.cmake)
