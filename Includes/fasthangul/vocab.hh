@@ -10,15 +10,15 @@ namespace vocab {
 
 class Vocab {
 public:
-  Vocab(std::vector<std::wstring> words, std::wstring_view unknownToken = L"<UNK>");
+  Vocab(std::vector<std::wstring> words, std::wstring unknownToken = L"<UNK>");
 
-  size_t find(std::wstring_view word);
+  size_t find(std::wstring word);
   std::wstring_view at(size_t index);
 
 private:
   size_t unknownTokenIndex;
-  std::unordered_map<std::wstring_view, size_t> vocabData;
-  std::unordered_map<size_t, std::wstring_view> inversedVocabData;
+  std::unordered_map<std::wstring, size_t> vocabData;
+  std::unordered_map<size_t, std::wstring> inversedVocabData;
 };
 
 } // namespace vocab

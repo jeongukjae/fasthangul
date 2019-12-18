@@ -2,11 +2,11 @@
 #include <cassert>
 #include <iostream>
 
-fasthangul::vocab::Vocab::Vocab(std::vector<std::wstring> words, std::wstring_view unknownToken) {
-  size_t index = 0;
-
+fasthangul::vocab::Vocab::Vocab(std::vector<std::wstring> words, std::wstring unknownToken) {
   vocabData.reserve(words.size());
   inversedVocabData.reserve(words.size());
+
+  size_t index = 0;
 
   for (auto &word : words) {
     vocabData[word] = index;
@@ -19,7 +19,7 @@ fasthangul::vocab::Vocab::Vocab(std::vector<std::wstring> words, std::wstring_vi
   unknownTokenIndex = found->second;
 }
 
-size_t fasthangul::vocab::Vocab::find(std::wstring_view word) {
+size_t fasthangul::vocab::Vocab::find(std::wstring word) {
   auto found = vocabData.find(word);
   if (found == vocabData.end())
     return unknownTokenIndex;
