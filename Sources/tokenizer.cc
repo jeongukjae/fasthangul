@@ -1,6 +1,6 @@
 #include "fasthangul/tokenizer.hh"
 #include <algorithm>
-#include <cwctype>
+#include <cctype>
 
 using namespace fasthangul;
 
@@ -79,9 +79,9 @@ std::vector<std::wstring_view> tokenizer::tokenizeStringWithLambda(std::wstring_
 }
 
 std::vector<std::wstring_view> tokenizer::tokenizeWhitespace(std::wstring_view text) {
-  return tokenizer::tokenizeStringWithLambda(text, true, (bool (*)(wchar_t))std::iswspace);
+  return tokenizer::tokenizeStringWithLambda(text, true, (bool (*)(wchar_t))std::isspace);
 }
 
 std::vector<std::wstring_view> tokenizer::tokenizePunctuation(std::wstring_view text) {
-  return tokenizer::tokenizeStringWithLambda(text, false, (bool (*)(wchar_t))std::iswpunct);
+  return tokenizer::tokenizeStringWithLambda(text, false, (bool (*)(wchar_t))std::ispunct);
 }
