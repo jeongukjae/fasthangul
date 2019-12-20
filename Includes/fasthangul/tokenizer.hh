@@ -23,6 +23,8 @@ private:
   std::vector<std::wstring> tokenizeSubword(const std::wstring &token);
 };
 
+std::vector<std::wstring_view> tokenizeStringWithLambda(std::wstring_view text, bool ignoreDelimiter,
+                                                        std::function<bool(const wchar_t)> lambda);
 std::vector<std::wstring_view> tokenizeWhitespace(std::wstring_view text);
 std::vector<std::wstring_view> tokenizePunctuation(std::wstring_view text);
 

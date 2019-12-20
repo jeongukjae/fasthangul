@@ -53,23 +53,8 @@ std::vector<std::wstring> tokenizer::WordPieceTokenizer::tokenizeSubword(const s
   return subwords;
 }
 
-std::vector<std::wstring_view> tokenizer::tokenizeWhitespace(std::wstring_view text) {
-  std::vector<std::wstring_view> result;
-
-  auto first = text.data();
-  auto second = text.data();
-  auto last = first + text.size();
-  for (; second != last && first != last; first = second + 1) {
-    second = std::find(first, last, L' ');
-
-    if (first != second)
-      result.emplace_back(first, second - first);
-  }
-
-  return result;
-}
-
-std::vector<std::wstring_view> tokenizer::tokenizePunctuation(std::wstring_view text) {
+std::vector<std::wstring_view> tokenizer::tokenizeStringWithLambda(std::wstring_view text, bool ignoreDelimiter,
+                                                                   std::function<bool(const wchar_t)> lambda) {
   std::vector<std::wstring_view> result;
 
   auto first = text.data();
@@ -78,16 +63,24 @@ std::vector<std::wstring_view> tokenizer::tokenizePunctuation(std::wstring_view 
   auto last = first + text.size();
 
   for (; second != last && first != last; first = third) {
-    second = std::find_if(first, last, [](const char element) { return std::ispunct(element); });
-    third = std::find_if(second, last, [](const char element) { return !std::ispunct(element); });
+    second = std::find_if(first, last, [lambda](const char element) { return lambda(element); });
+    third = std::find_if(second, last, [lambda](const char element) { return !lambda(element); });
 
     if (first != second) {
       result.emplace_back(first, second - first);
     }
-    if (second != third) {
+    if (!ignoreDelimiter && second != third) {
       result.emplace_back(second, third - second);
     }
   }
 
   return result;
+}
+
+std::vector<std::wstring_view> tokenizer::tokenizeWhitespace(std::wstring_view text) {
+  return tokenizer::tokenizeStringWithLambda(text, true, (bool (*)(wchar_t))std::iswspace);
+}
+
+std::vector<std::wstring_view> tokenizer::tokenizePunctuation(std::wstring_view text) {
+  return tokenizer::tokenizeStringWithLambda(text, false, (bool (*)(wchar_t))std::iswpunct);
 }
