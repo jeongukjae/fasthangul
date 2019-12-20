@@ -2,16 +2,15 @@
 #include <algorithm>
 #include <cctype>
 
-using namespace fasthangul;
-
-tokenizer::WordPieceTokenizer::WordPieceTokenizer(vocab::Vocab *vocab, std::wstring unknown_token,
-                                                  std::wstring_view subwordPrefix) {
+fasthangul::tokenizer::WordPieceTokenizer::WordPieceTokenizer(fasthangul::vocab::Vocab *vocab,
+                                                              std::wstring unknown_token,
+                                                              std::wstring_view subwordPrefix) {
   this->vocab = vocab;
   this->unknownTokenVector.push_back(unknown_token);
   this->subwordPrefix = subwordPrefix;
 }
 
-std::vector<std::wstring> tokenizer::WordPieceTokenizer::tokenize(std::wstring_view text) {
+std::vector<std::wstring> fasthangul::tokenizer::WordPieceTokenizer::tokenize(std::wstring_view text) {
   std::vector<std::wstring_view> tokenized = tokenizer::tokenizeWhitespace(text);
   std::vector<std::vector<std::wstring>> subwordTokenized;
 
@@ -27,7 +26,7 @@ std::vector<std::wstring> tokenizer::WordPieceTokenizer::tokenize(std::wstring_v
   return k;
 }
 
-std::vector<std::wstring> tokenizer::WordPieceTokenizer::tokenizeSubword(const std::wstring &token) {
+std::vector<std::wstring> fasthangul::tokenizer::WordPieceTokenizer::tokenizeSubword(const std::wstring &token) {
   std::vector<std::wstring> subwords;
 
   size_t tokenLength = token.size();
@@ -54,8 +53,9 @@ std::vector<std::wstring> tokenizer::WordPieceTokenizer::tokenizeSubword(const s
   return subwords;
 }
 
-std::vector<std::wstring_view> tokenizer::tokenizeStringWithLambda(std::wstring_view text, bool ignoreDelimiter,
-                                                                   std::function<bool(const wchar_t)> lambda) {
+std::vector<std::wstring_view>
+fasthangul::tokenizer::tokenizeStringWithLambda(std::wstring_view text, bool ignoreDelimiter,
+                                                std::function<bool(const wchar_t)> lambda) {
   std::vector<std::wstring_view> result;
 
   auto first = text.data();
@@ -78,10 +78,10 @@ std::vector<std::wstring_view> tokenizer::tokenizeStringWithLambda(std::wstring_
   return result;
 }
 
-std::vector<std::wstring_view> tokenizer::tokenizeWhitespace(std::wstring_view text) {
-  return tokenizer::tokenizeStringWithLambda(text, true, (bool (*)(wchar_t))std::isspace);
+std::vector<std::wstring_view> fasthangul::tokenizer::tokenizeWhitespace(std::wstring_view text) {
+  return fasthangul::tokenizer::tokenizeStringWithLambda(text, true, (bool (*)(wchar_t))std::isspace);
 }
 
-std::vector<std::wstring_view> tokenizer::tokenizePunctuation(std::wstring_view text) {
-  return tokenizer::tokenizeStringWithLambda(text, false, (bool (*)(wchar_t))std::ispunct);
+std::vector<std::wstring_view> fasthangul::tokenizer::tokenizePunctuation(std::wstring_view text) {
+  return fasthangul::tokenizer::tokenizeStringWithLambda(text, false, (bool (*)(wchar_t))std::ispunct);
 }
