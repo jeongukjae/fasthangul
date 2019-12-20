@@ -1,6 +1,6 @@
 #include "fasthangul/tokenizer.hh"
 #include <algorithm>
-#include <cctype>
+#include <cwctype>
 
 fasthangul::tokenizer::WordPieceTokenizer::WordPieceTokenizer(fasthangul::vocab::Vocab *vocab,
                                                               std::wstring unknown_token,
@@ -64,8 +64,8 @@ fasthangul::tokenizer::tokenizeStringWithLambda(std::wstring_view text, bool ign
   auto last = first + text.size();
 
   for (; second != last && first != last; first = third) {
-    second = std::find_if(first, last, [lambda](const char element) { return lambda(element); });
-    third = std::find_if(second, last, [lambda](const char element) { return !lambda(element); });
+    second = std::find_if(first, last, lambda);
+    third = std::find_if_not(second, last, lambda);
 
     if (first != second) {
       result.emplace_back(first, second - first);
@@ -79,9 +79,9 @@ fasthangul::tokenizer::tokenizeStringWithLambda(std::wstring_view text, bool ign
 }
 
 std::vector<std::wstring_view> fasthangul::tokenizer::tokenizeWhitespace(std::wstring_view text) {
-  return fasthangul::tokenizer::tokenizeStringWithLambda(text, true, (bool (*)(wchar_t))std::isspace);
+  return fasthangul::tokenizer::tokenizeStringWithLambda(text, true, [](const wchar_t c) { return std::iswspace(c); });
 }
 
 std::vector<std::wstring_view> fasthangul::tokenizer::tokenizePunctuation(std::wstring_view text) {
-  return fasthangul::tokenizer::tokenizeStringWithLambda(text, false, (bool (*)(wchar_t))std::ispunct);
+  return fasthangul::tokenizer::tokenizeStringWithLambda(text, false, [](const wchar_t c) { return std::iswpunct(c); });
 }
