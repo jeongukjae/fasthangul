@@ -12,9 +12,9 @@ class Vocab {
 public:
   Vocab(std::vector<std::wstring> &words, std::wstring unknownToken = L"<UNK>");
 
-  size_t find(std::wstring word);
-  bool has(std::wstring word);
-  std::wstring_view at(size_t index);
+  const size_t find(std::wstring word);
+  const bool has(std::wstring word);
+  const std::wstring_view at(size_t index);
 
 private:
   size_t unknownTokenIndex;
