@@ -1,5 +1,6 @@
 #include "fasthangul/tokenizer.hh"
 #include <algorithm>
+#include <cwctype>
 
 using namespace fasthangul;
 
