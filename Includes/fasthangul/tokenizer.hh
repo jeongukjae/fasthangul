@@ -1,6 +1,7 @@
 #ifndef __FH_TOKENIZER_H__
 #define __FH_TOKENIZER_H__
 
+#include "fasthangul/vocab.hh"
 #include <string>
 #include <vector>
 
@@ -9,13 +10,13 @@ namespace tokenizer {
 
 class WordPieceTokenizer {
 public:
-  WordPieceTokenizer(const std::vector<std::wstring> *wordPieces);
+  WordPieceTokenizer(const vocab::Vocab *vocab);
   std::vector<std::wstring> tokenize(std::wstring_view text);
 
 private:
-  const std::vector<std::wstring> *wordPieces;
+  const vocab::Vocab *vocab;
 
-  std::vector<std::wstring> tokenizeSubword(const std::wstring_view &token);
+  std::vector<std::wstring> tokenizeSubword(const std::wstring &token);
 };
 
 std::vector<std::wstring_view> tokenizeWhitespace(std::wstring_view text);

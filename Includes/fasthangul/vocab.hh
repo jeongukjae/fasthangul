@@ -10,9 +10,10 @@ namespace vocab {
 
 class Vocab {
 public:
-  Vocab(std::vector<std::wstring> words, std::wstring unknownToken = L"<UNK>");
+  Vocab(std::vector<std::wstring> &words, std::wstring unknownToken = L"<UNK>");
 
   size_t find(std::wstring word);
+  bool has(std::wstring word);
   std::wstring_view at(size_t index);
 
 private:
