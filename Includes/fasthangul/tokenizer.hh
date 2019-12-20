@@ -2,6 +2,7 @@
 #define __FH_TOKENIZER_H__
 
 #include "fasthangul/vocab.hh"
+#include <functional>
 #include <string>
 #include <vector>
 
