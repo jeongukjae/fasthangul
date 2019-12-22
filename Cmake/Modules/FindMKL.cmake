@@ -12,16 +12,30 @@
 option(USE_TBB "USE TBB with MKL" ON)
 set(MKL_ROOT "/opt/intel/mkl")
 
-set(mkl_lib "libmkl_intel_lp64.dylib")
-set(mkl_core_lib "libmkl_core.dylib")
+if (APPLE)
+  set(mkl_lib "libmkl_intel_lp64.dylib")
+  set(mkl_core_lib "libmkl_core.dylib")
 
-if (USE_TBB)
-  set(threading_lib "libmkl_tbb_thread.dylib")
-  set(threading_extra "stdc++")
-else()
-  set(threading_lib "libmkl_intel_thread.dylib")
-  set(threading_extra "pthread")
+  if (USE_TBB)
+    set(threading_lib "libmkl_tbb_thread.dylib")
+    set(threading_extra "stdc++")
+  else()
+    set(threading_lib "libmkl_intel_thread.dylib")
+    set(threading_extra "pthread")
+  endif()
+else(APPLE)
+  set(mkl_lib "libmkl_intel_lp64.so")
+  set(mkl_core_lib "libmkl_core.so")
+
+  if (USE_TBB)
+    set(threading_lib "libmkl_tbb_thread.so")
+    set(threading_extra "stdc++")
+  else()
+    set(threading_lib "libmkl_intel_thread.so")
+    set(threading_extra "pthread")
+  endif()
 endif()
+
 
 find_path(MKL_INCLUDE_DIR NAMES mkl.h HINTS ${MKL_ROOT}/include)
 find_library(MKL_INTERFACE_LIBRARY
