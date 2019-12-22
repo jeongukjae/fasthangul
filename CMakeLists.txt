@@ -30,4 +30,4 @@ include_directories(${MKL_INCLUDE_DIRS})
 
 # fasthangul
 add_library(fasthangul SHARED ${SOURCE_CODE})
-target_link_libraries(fasthangul ${MKL_LIBRARIES} TBB::tbb)
+target_link_libraries(fasthangul ${MKL_LIBRARIES} ${TBB_LIBRARY})
