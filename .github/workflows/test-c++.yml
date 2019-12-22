@@ -23,7 +23,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DTBBROOT=/usr/local -DBUILD_TEST=ON
+          cmake .. -DBUILD_TEST=ON
       - name: run tests
         run: |
           cd build
@@ -49,7 +49,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DTBBROOT=/usr/local -DBUILD_TEST=ON -DBUILD_COVERAGE=ON
+          cmake .. -DBUILD_TEST=ON -DBUILD_COVERAGE=ON
       - name: run tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
