@@ -16,5 +16,6 @@ mkdir ${MKL_LIB_FILE} ${MKL_INC_FILE}
 tar -xvjf ${MKL_LIB_FILE}.tar.bz2 -C ${MKL_LIB_FILE}
 tar -xvjf ${MKL_INC_FILE}.tar.bz2 -C ${MKL_INC_FILE}
 
+mkdir -p /opt/intel/mkl
 mv ${MKL_LIB_FILE}/lib /opt/intel/mkl/lib
 mv ${MKL_INC_FILE}/include /opt/intel/mkl/include
