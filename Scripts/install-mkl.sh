@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 if [ "$(uname)" == "Darwin" ]; then
   echo "Install MKL On MacOS"
   export PLATFORM=osx-64
