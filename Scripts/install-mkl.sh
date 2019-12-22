@@ -23,3 +23,6 @@ sudo mkdir -p /opt/intel/mkl
 sudo chown $(id -u):$(id -g) /opt/intel/mkl
 mv ${MKL_LIB_FILE}/lib /opt/intel/mkl/lib
 mv ${MKL_INC_FILE}/include /opt/intel/mkl/include
+
+rm -rf ${MKL_LIB_FILE} ${MKL_LIB_FILE}.tar.bz2
+rm -rf ${MKL_INC_FILE} ${MKL_INC_FILE}.tar.bz2

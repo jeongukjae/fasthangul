@@ -13,8 +13,12 @@ jobs:
       - uses: actions/checkout@v1
       - name: git pull submodules
         run: git submodule update --init --recursive
+
       - name: install mkl
         run: ./Scripts/install-mkl.sh
+      - name: install tbb
+        run: ./Scripts/install-tbb.sh
+
       - name: setup cmake
         run: |
           mkdir build
@@ -33,10 +37,14 @@ jobs:
       - uses: actions/checkout@v1
       - name: git pull submodules
         run: git submodule update --init --recursive
+
       - name: install mkl
         run: ./Scripts/install-mkl.sh
+      - name: install tbb
+        run: ./Scripts/install-tbb.sh
       - name: install lcov
         run: sudo apt-get install lcov
+
       - name: setup cmake
         run: |
           mkdir build
