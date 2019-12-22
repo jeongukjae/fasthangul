@@ -22,9 +22,12 @@ set(TEST_CODE
 include(./Cmake/Testing.cmake)
 include(./Cmake/CodeCoverage.cmake)
 
+# link libraries
 find_package(MKL REQUIRED)
+find_package(TBB REQUIRED)
+
+include_directories(${MKL_INCLUDE_DIRS})
 
 # fasthangul
-include_directories(${MKL_INCLUDE_DIRS})
 add_library(fasthangul SHARED ${SOURCE_CODE})
-target_link_libraries(fasthangul ${MKL_LIBRARIES})
+target_link_libraries(fasthangul ${MKL_LIBRARIES} TBB::tbb)
