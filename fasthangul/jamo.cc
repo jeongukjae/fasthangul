@@ -1,9 +1,8 @@
 #include "fasthangul/jamo.hh"
 #include "PythonExtension.hh"
 #include <string>
-#include <string_view>
 
-static PyObject *JAMO_compose(PyObject *self, PyObject *args) {
+static PyObject *JAMO_compose_jamo(PyObject *self, PyObject *args) {
   PyObject *string = NULL;
   if (!PyArg_UnpackTuple(args, "args", 1, 1, &string))
     return NULL;
@@ -14,14 +13,14 @@ static PyObject *JAMO_compose(PyObject *self, PyObject *args) {
   }
 
   wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
-  std::wstring composed = fasthangul::jamo::compose(std::wstring_view{hangulString});
+  std::wstring composed = fasthangul::jamo::compose(std::wstring{hangulString});
   PyObject *result = PyUnicode_FromWideChar(composed.c_str(), composed.length());
 
   Py_INCREF(result);
   return result;
 }
 
-static PyObject *JAMO_decompose(PyObject *self, PyObject *args) {
+static PyObject *JAMO_decompose_jamo(PyObject *self, PyObject *args) {
   PyObject *string = NULL;
   if (!PyArg_UnpackTuple(args, "args", 1, 1, &string))
     return NULL;
@@ -32,7 +31,7 @@ static PyObject *JAMO_decompose(PyObject *self, PyObject *args) {
   }
 
   wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
-  std::wstring decomposed = fasthangul::jamo::decompose(std::wstring_view{hangulString});
+  std::wstring decomposed = fasthangul::jamo::decompose(std::wstring{hangulString});
   PyObject *result = PyUnicode_FromWideChar(decomposed.c_str(), decomposed.length());
 
   Py_INCREF(result);
@@ -42,8 +41,8 @@ static PyObject *JAMO_decompose(PyObject *self, PyObject *args) {
 /* ------------------- */
 /* delcare Jamo Module */
 static PyMethodDef jamoMethods[] = {
-    {"compose", (PyCFunction)JAMO_compose, METH_VARARGS, "자모를 조합하는 함수입니다."},
-    {"decompose", (PyCFunction)JAMO_decompose, METH_VARARGS, "자모를 분리하는 함수입니다."},
+    {"compose_jamo", (PyCFunction)JAMO_compose_jamo, METH_VARARGS, "자모를 조합하는 함수입니다."},
+    {"decompose_jamo", (PyCFunction)JAMO_decompose_jamo, METH_VARARGS, "자모를 분리하는 함수입니다."},
     {NULL}};
 
 static PyModuleDef fasthangulJamoModule = {PyModuleDef_HEAD_INIT, "fasthangul.jamo", "", -1, jamoMethods};

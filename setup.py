@@ -2,26 +2,18 @@ from setuptools import setup, Extension
 
 fasthangul_jamo = Extension(
     "fasthangul.jamo",
-    sources=["../../Sources/jamo.cc", "fasthangul/jamo.cc",],
-    include_dirs=["../../Includes"],
-    extra_compile_args=["-std=c++17"],
-    language="c++",
-)
-
-fasthangul_normalizer = Extension(
-    "fasthangul.normalizer",
-    sources=["../../Sources/normalizer.cc", "fasthangul/normalizer.cc",],
-    include_dirs=["../../Includes"],
+    sources=["./src/jamo.cc", "fasthangul/jamo.cc",],
+    include_dirs=["./includes"],
     extra_compile_args=["-std=c++17"],
     language="c++",
 )
 
 setup(
     name="fasthangul",
-    version="1.0.0a1",
+    version="1.0.0a2",
     python_requires=">=3.5",
     packages=["fasthangul"],
-    ext_modules=[fasthangul_jamo, fasthangul_normalizer],
+    ext_modules=[fasthangul_jamo],
     url="https://github.com/jeongukjae/fasthangul",
     author="Jeong Ukjae",
     author_email="jeongukjae@gmail.com",

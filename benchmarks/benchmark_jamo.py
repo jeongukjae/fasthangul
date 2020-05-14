@@ -2,7 +2,7 @@ import random
 import string
 import time
 
-from fasthangul.jamo import compose, decompose
+from fasthangul.jamo import compose_jamo, decompose_jamo
 from han2jamo import Han2Jamo
 from hgtk import text as hgtk
 
@@ -38,11 +38,11 @@ def main():
 
         # fasthangul
         fh_decomposition = time.time()
-        decomposed = decompose(sentences)
+        decomposed = decompose_jamo(sentences)
         fh_decomposition = time.time() - fh_decomposition
 
         fh_composition = time.time()
-        composed = compose(decomposed)
+        composed = compose_jamo(decomposed)
         fh_composition = time.time() - fh_composition
 
         assert sentences == composed, "fasthangul error"
