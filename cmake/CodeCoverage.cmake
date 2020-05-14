@@ -21,7 +21,7 @@ if(BUILD_COVERAGE)
     COMMAND ./run-test
     COMMAND ${LCOV_COMMAND} --directory . --capture --output-file coverage.info.raw
     COMMAND ${LCOV_COMMAND} --extract coverage.info.raw '**/fasthangul/**' --output-file coverage.info.extracted
-    COMMAND ${LCOV_COMMAND} --remove coverage.info.extracted '**/_test.cc' '**/third_party/**' '/usr/*' --output-file coverage.info
+    COMMAND ${LCOV_COMMAND} --remove coverage.info.extracted '**/*_test.cc' '**/third_party/**' '/usr/*' --output-file coverage.info
     COMMAND ${CMAKE_COMMAND} -E remove coverage.info.raw coverage.info.extracted
 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
