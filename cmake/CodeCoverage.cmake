@@ -17,11 +17,11 @@ if(BUILD_COVERAGE)
 
   add_custom_target(coverage
     COMMAND ${LCOV_COMMAND} --directory . --zerocounters
-    COMMAND ${LCOV_COMMAND} --capture --initial --directory ../Sources --output-file app_base.info
+    COMMAND ${LCOV_COMMAND} --capture --initial --directory ../src --output-file app_base.info
     COMMAND ./run-test
     COMMAND ${LCOV_COMMAND} --directory . --capture --output-file coverage.info.raw
     COMMAND ${LCOV_COMMAND} --extract coverage.info.raw '**/fasthangul/**' --output-file coverage.info.extracted
-    COMMAND ${LCOV_COMMAND} --remove coverage.info.extracted '**/Tests/**' '**/third_party/**' '/usr/*' --output-file coverage.info
+    COMMAND ${LCOV_COMMAND} --remove coverage.info.extracted '**/_test.cc' '**/third_party/**' '/usr/*' --output-file coverage.info
     COMMAND ${CMAKE_COMMAND} -E remove coverage.info.raw coverage.info.extracted
 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
