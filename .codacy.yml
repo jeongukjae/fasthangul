@@ -1,4 +1,4 @@
 exclude_paths:
-  - "Extension/Python/tests/**"
-  - "Benchmarks/**"
+  - "tests/**"
+  - "benchmarks/**"
   - "README.md"
