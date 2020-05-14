@@ -17,11 +17,11 @@ include(./cmake/Testing.cmake)
 include(./cmake/CodeCoverage.cmake)
 
 # link libraries
-find_package(MKL REQUIRED)
-find_package(TBB REQUIRED)
+# find_package(MKL REQUIRED)
+# find_package(TBB REQUIRED)
 
-include_directories(${MKL_INCLUDE_DIRS})
-include_directories(${TBB_INCLUDE_DIR})
+# include_directories(${MKL_INCLUDE_DIRS})
+# include_directories(${TBB_INCLUDE_DIR})
 
 # fasthangul
 add_library(fasthangul SHARED ${SOURCE_CODE})
