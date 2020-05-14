@@ -14,10 +14,10 @@ jobs:
       - name: git pull submodules
         run: git submodule update --init --recursive
 
-      - name: install mkl
-        run: ./Scripts/install-mkl.sh
-      - name: install tbb
-        run: ./Scripts/install-tbb.sh
+      # - name: install mkl
+      #   run: ./scripts/install-mkl.sh
+      # - name: install tbb
+      #   run: ./scripts/install-tbb.sh
 
       - name: setup cmake
         run: |
@@ -38,10 +38,10 @@ jobs:
       - name: git pull submodules
         run: git submodule update --init --recursive
 
-      - name: install mkl
-        run: ./Scripts/install-mkl.sh
-      - name: install tbb
-        run: ./Scripts/install-tbb.sh
+      # - name: install mkl
+      #   run: ./scripts/install-mkl.sh
+      # - name: install tbb
+      #   run: ./scripts/install-tbb.sh
       - name: install lcov
         run: sudo apt-get install lcov
 

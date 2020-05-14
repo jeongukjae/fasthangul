@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 
 fasthangul_jamo = Extension(
     "fasthangul.jamo",
-    sources=["./src/jamo.cc", "fasthangul/jamo.cc",],
+    sources=["./src/jamo.cc", "fasthangul/jamo.cc"],
     include_dirs=["./includes"],
     extra_compile_args=["-std=c++17"],
     language="c++",
@@ -14,6 +14,10 @@ setup(
     python_requires=">=3.5",
     packages=["fasthangul"],
     ext_modules=[fasthangul_jamo],
+    package_data={
+        "": ["includes"],
+        "fasthangul": ["**.hh"],
+    },
     url="https://github.com/jeongukjae/fasthangul",
     author="Jeong Ukjae",
     author_email="jeongukjae@gmail.com",
