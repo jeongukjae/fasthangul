@@ -13,10 +13,12 @@ static PyObject *JAMO_compose_jamo(PyObject *self, PyObject *args) {
   }
 
   wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
+  if (hangulString == NULL) {
+    return NULL;
+  }
   std::wstring composed = fasthangul::jamo::compose(std::wstring{hangulString});
   PyObject *result = PyUnicode_FromWideChar(composed.c_str(), composed.length());
-
-  Py_INCREF(result);
+  PyMem_Free(hangulString);
   return result;
 }
 
@@ -31,10 +33,12 @@ static PyObject *JAMO_decompose_jamo(PyObject *self, PyObject *args) {
   }
 
   wchar_t *hangulString = PyUnicode_AsWideCharString(string, NULL);
+  if (hangulString == NULL) {
+    return NULL;
+  }
   std::wstring decomposed = fasthangul::jamo::decompose(std::wstring{hangulString});
   PyObject *result = PyUnicode_FromWideChar(decomposed.c_str(), decomposed.length());
-
-  Py_INCREF(result);
+  PyMem_Free(hangulString);
   return result;
 }
 
