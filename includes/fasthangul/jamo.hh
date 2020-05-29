@@ -8,8 +8,8 @@ namespace fasthangul {
 namespace jamo {
 
 void initializeJamos();
-std::wstring compose(std::wstring_view hangul);
-std::wstring decompose(std::wstring_view hangul);
+std::wstring compose(std::wstring hangul);
+std::wstring decompose(std::wstring hangul);
 
 bool isHangul(const wchar_t character);
 bool isJamo(const wchar_t character);

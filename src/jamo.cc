@@ -30,7 +30,7 @@ enum Composing {
   C_COMPOSING_BOTH, // 중성인 경우 앞 뒤 전부 합칠 때
 };
 
-std::wstring fasthangul::jamo::compose(std::wstring_view text) {
+std::wstring fasthangul::jamo::compose(std::wstring text) {
   std::wstring resultString{};
   const size_t textLength = text.size();
 
@@ -76,7 +76,7 @@ std::wstring fasthangul::jamo::compose(std::wstring_view text) {
   return resultString;
 }
 
-std::wstring fasthangul::jamo::decompose(std::wstring_view text) {
+std::wstring fasthangul::jamo::decompose(std::wstring text) {
   std::vector<std::wstring> stringsToJoin(text.size());
   std::vector<int> totalLength(text.size());
   std::wstring resultString{};
