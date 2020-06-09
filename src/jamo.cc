@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+#define FIRST_HANGUL L'가'
+#define LAST_HANGUL L'힣'
+
 static const wchar_t CHOSUNG[] = {L'ㄱ', L'ㄲ', L'ㄴ', L'ㄷ', L'ㄸ', L'ㄹ', L'ㅁ', L'ㅂ', L'ㅃ', L'ㅅ',
                                   L'ㅆ', L'ㅇ', L'ㅈ', L'ㅉ', L'ㅊ', L'ㅋ', L'ㅌ', L'ㅍ', L'ㅎ'};
 static const wchar_t JUNGSUNG[] = {L'ㅏ', L'ㅐ', L'ㅑ', L'ㅒ', L'ㅓ', L'ㅔ', L'ㅕ', L'ㅖ', L'ㅗ', L'ㅘ', L'ㅙ',
@@ -15,13 +18,6 @@ static const wchar_t JONGSUNG[] = {L'\0', L'ㄱ', L'ㄲ', L'ㄳ', L'ㄴ', L'ㄵ'
 
 static const std::set<wchar_t> CHOSUNG_SET{CHOSUNG, CHOSUNG + 19};
 static const std::set<wchar_t> JONGSUNG_SET{JONGSUNG + 1, JONGSUNG + 28};
-static std::unordered_map<wchar_t, int> CHOSUNG_MAP;
-static std::unordered_map<wchar_t, int> JONGSUNG_MAP;
-
-static const wchar_t FIRST_HANGUL = L'가';
-static const wchar_t LAST_HANGUL = L'힣';
-
-static std::unordered_map<wchar_t, std::wstring> PRECOMPUTED_JAMOS;
 
 enum Composing {
   C_KEEP,           // 그냥 그대로 합치는 문자
@@ -30,7 +26,37 @@ enum Composing {
   C_COMPOSING_BOTH, // 중성인 경우 앞 뒤 전부 합칠 때
 };
 
-std::wstring fasthangul::jamo::compose(std::wstring text) {
+void fasthangul::jamo::JamoConverter::initializeJamos(bool fillEmptyJongsung, wchar_t emptyJongsung) {
+  PRECOMPUTED_JAMOS.clear();
+  CHOSUNG_MAP.clear();
+  JONGSUNG_MAP.clear();
+
+  wchar_t totalHangulCount = LAST_HANGUL - FIRST_HANGUL + 1;
+  for (wchar_t charIndex = 0; charIndex < totalHangulCount; ++charIndex) {
+    wchar_t chosungIndex = charIndex / 28 / 21;
+    wchar_t jungsungIndex = charIndex / 28 % 21;
+    wchar_t jongsungIndex = charIndex % 28;
+
+    if (fillEmptyJongsung && jongsungIndex == 0) {
+      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] =
+          std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex], emptyJongsung});
+    } else if (jongsungIndex != 0) {
+      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] =
+          std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex], JONGSUNG[jongsungIndex]});
+    } else {
+      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] = std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex]});
+    }
+  }
+
+  for (int i = 0; i < 19; ++i) {
+    CHOSUNG_MAP[CHOSUNG[i]] = i;
+  }
+  for (int i = 1; i < 28; ++i) {
+    JONGSUNG_MAP[JONGSUNG[i]] = i;
+  }
+}
+
+std::wstring fasthangul::jamo::JamoConverter::compose(std::wstring text) const {
   std::wstring resultString{};
   const size_t textLength = text.size();
 
@@ -76,12 +102,13 @@ std::wstring fasthangul::jamo::compose(std::wstring text) {
   return resultString;
 }
 
-std::wstring fasthangul::jamo::decompose(std::wstring text) {
+std::wstring fasthangul::jamo::JamoConverter::decompose(std::wstring text) const {
   std::vector<std::wstring> stringsToJoin(text.size());
   std::vector<int> totalLength(text.size());
   std::wstring resultString{};
 
-  std::transform(text.begin(), text.end(), stringsToJoin.begin(), getJamosFromHangul);
+  std::transform(text.begin(), text.end(), stringsToJoin.begin(),
+                 [this](const wchar_t character) { return getJamosFromHangul(character); });
   std::transform(stringsToJoin.begin(), stringsToJoin.end(), totalLength.begin(),
                  [](const std::wstring &chunk) { return chunk.length(); });
 
@@ -92,34 +119,39 @@ std::wstring fasthangul::jamo::decompose(std::wstring text) {
   return resultString;
 }
 
-void fasthangul::jamo::initializeJamos(bool fillEmptyJongsung, wchar_t emptyJongsung) {
-  PRECOMPUTED_JAMOS.clear();
-  CHOSUNG_MAP.clear();
-  JONGSUNG_MAP.clear();
+wchar_t fasthangul::jamo::JamoConverter::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung) const {
+  const auto iterator = this->CHOSUNG_MAP.find(chosung);
+  if (iterator == this->CHOSUNG_MAP.end())
+    throw std::runtime_error("Cannot fetch chosung");
 
-  wchar_t totalHangulCount = LAST_HANGUL - FIRST_HANGUL + 1;
-  for (wchar_t charIndex = 0; charIndex < totalHangulCount; ++charIndex) {
-    wchar_t chosungIndex = charIndex / 28 / 21;
-    wchar_t jungsungIndex = charIndex / 28 % 21;
-    wchar_t jongsungIndex = charIndex % 28;
+  wchar_t chosungIndex = iterator->second;
+  wchar_t jungsungIndex = jungsung - L'ㅏ';
 
-    if (fillEmptyJongsung && jongsungIndex == 0) {
-      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] =
-          std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex], emptyJongsung});
-    } else if (jongsungIndex != 0) {
-      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] =
-          std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex], JONGSUNG[jongsungIndex]});
-    } else {
-      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] = std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex]});
+  return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex);
+}
+
+wchar_t fasthangul::jamo::JamoConverter::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung,
+                                                              wchar_t jongsung) const {
+  const auto chosungIterator = this->CHOSUNG_MAP.find(chosung);
+  const auto jongsungIterator = this->JONGSUNG_MAP.find(jongsung);
+  if (chosungIterator == this->CHOSUNG_MAP.end() || jongsungIterator == this->JONGSUNG_MAP.end())
+    throw std::runtime_error("Cannot fetch chosung or jongsung");
+
+  wchar_t chosungIndex = chosungIterator->second;
+  wchar_t jungsungIndex = jungsung - L'ㅏ';
+  wchar_t jongsungIndex = jongsungIterator->second;
+
+  return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex) + jongsungIndex;
+}
+
+std::wstring fasthangul::jamo::JamoConverter::getJamosFromHangul(const wchar_t character) const {
+  if (isHangul(character)) {
+    const auto jamos = this->PRECOMPUTED_JAMOS.find(character);
+    if (jamos != this->PRECOMPUTED_JAMOS.end()) {
+      return jamos->second;
     }
   }
-
-  for (int i = 0; i < 19; ++i) {
-    CHOSUNG_MAP[CHOSUNG[i]] = i;
-  }
-  for (int i = 1; i < 28; ++i) {
-    JONGSUNG_MAP[JONGSUNG[i]] = i;
-  }
+  return std::wstring{character};
 }
 
 bool fasthangul::jamo::isHangul(const wchar_t character) {
@@ -134,25 +166,4 @@ bool fasthangul::jamo::isJungsung(const wchar_t character) { return character >=
 
 bool fasthangul::jamo::isJongsung(const wchar_t character) {
   return JONGSUNG_SET.find(character) != JONGSUNG_SET.end();
-}
-
-wchar_t fasthangul::jamo::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung) {
-  wchar_t chosungIndex = CHOSUNG_MAP[chosung];
-  wchar_t jungsungIndex = jungsung - L'ㅏ';
-
-  return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex);
-}
-
-wchar_t fasthangul::jamo::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung) {
-  wchar_t chosungIndex = CHOSUNG_MAP[chosung];
-  wchar_t jungsungIndex = jungsung - L'ㅏ';
-  wchar_t jongsungIndex = JONGSUNG_MAP[jongsung];
-
-  return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex) + jongsungIndex;
-}
-
-std::wstring fasthangul::jamo::getJamosFromHangul(const wchar_t character) {
-  if (isHangul(character))
-    return PRECOMPUTED_JAMOS[character];
-  return std::wstring{character};
 }

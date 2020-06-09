@@ -2,6 +2,8 @@
 #include "PythonExtension.hh"
 #include <string>
 
+static fasthangul::jamo::JamoConverter converter;
+
 static PyObject *JAMO_compose_jamo(PyObject *self, PyObject *args) {
   PyObject *string = NULL;
   if (!PyArg_UnpackTuple(args, "args", 1, 1, &string))
@@ -16,7 +18,7 @@ static PyObject *JAMO_compose_jamo(PyObject *self, PyObject *args) {
   if (hangulString == NULL) {
     return NULL;
   }
-  std::wstring composed = fasthangul::jamo::compose(std::wstring{hangulString});
+  std::wstring composed = converter.compose(std::wstring{hangulString});
   PyObject *result = PyUnicode_FromWideChar(composed.c_str(), composed.length());
   PyMem_Free(hangulString);
   return result;
@@ -36,7 +38,7 @@ static PyObject *JAMO_decompose_jamo(PyObject *self, PyObject *args) {
   if (hangulString == NULL) {
     return NULL;
   }
-  std::wstring decomposed = fasthangul::jamo::decompose(std::wstring{hangulString});
+  std::wstring decomposed = converter.decompose(std::wstring{hangulString});
   PyObject *result = PyUnicode_FromWideChar(decomposed.c_str(), decomposed.length());
   PyMem_Free(hangulString);
   return result;
@@ -57,7 +59,7 @@ PyMODINIT_FUNC PyInit_jamo(void) {
   if (fasthangulJamo == NULL)
     return NULL;
 
-  fasthangul::jamo::initializeJamos();
+  converter.initializeJamos();
 
   return fasthangulJamo;
 }
