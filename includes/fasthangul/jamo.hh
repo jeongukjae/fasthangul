@@ -10,7 +10,7 @@ namespace fasthangul {
 namespace jamo {
 
 class JamoConverter {
-public:
+ public:
   void initializeJamos(bool fillEmptyJongsung = false, wchar_t emptyJongsung = DEFAULT_EMPTY_JONGSUNG);
   std::wstring compose(std::wstring hangul) const;
   std::wstring decompose(std::wstring hangul) const;
@@ -19,7 +19,7 @@ public:
   wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung) const;
   std::wstring getJamosFromHangul(const wchar_t hangul) const;
 
-protected:
+ protected:
   std::unordered_map<wchar_t, int> CHOSUNG_MAP;
   std::unordered_map<wchar_t, int> JONGSUNG_MAP;
 
@@ -32,7 +32,7 @@ bool isChosung(const wchar_t character);
 bool isJungsung(const wchar_t character);
 bool isJongsung(const wchar_t character);
 
-} // namespace jamo
-} // namespace fasthangul
+}  // namespace jamo
+}  // namespace fasthangul
 
 #endif /* __FH_JAMO_H__ */

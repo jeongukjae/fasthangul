@@ -3,4 +3,4 @@
 
 #include "fasthangul/jamo.hh"
 
-#endif /* __FH_FASTHANGUL_H__ */
+#endif  // __FH_FASTHANGUL_H__

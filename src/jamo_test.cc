@@ -1,4 +1,5 @@
 #include "fasthangul/jamo.hh"
+
 #include "gtest/gtest.h"
 
 using namespace fasthangul::jamo;

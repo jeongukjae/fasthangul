@@ -1,4 +1,5 @@
 #include "fasthangul/jamo.hh"
+
 #include <algorithm>
 #include <numeric>
 #include <set>
@@ -20,10 +21,10 @@ static const std::set<wchar_t> CHOSUNG_SET{CHOSUNG, CHOSUNG + 19};
 static const std::set<wchar_t> JONGSUNG_SET{JONGSUNG + 1, JONGSUNG + 28};
 
 enum Composing {
-  C_KEEP,           // 그냥 그대로 합치는 문자
-  C_IGNORE,         // 무시하는 문자
-  C_COMPOSING,      // 중성인 경우 앞만 합칠 때
-  C_COMPOSING_BOTH, // 중성인 경우 앞 뒤 전부 합칠 때
+  C_KEEP,            // 그냥 그대로 합치는 문자
+  C_IGNORE,          // 무시하는 문자
+  C_COMPOSING,       // 중성인 경우 앞만 합칠 때
+  C_COMPOSING_BOTH,  // 중성인 경우 앞 뒤 전부 합칠 때
 };
 
 void fasthangul::jamo::JamoConverter::initializeJamos(bool fillEmptyJongsung, wchar_t emptyJongsung) {
@@ -60,7 +61,7 @@ std::wstring fasthangul::jamo::JamoConverter::compose(std::wstring text) const {
   std::wstring resultString{};
   const size_t textLength = text.size();
 
-  Composing *composing = new Composing[textLength]{
+  Composing* composing = new Composing[textLength]{
       C_KEEP,
   };
   size_t expectedLength = textLength;
@@ -110,7 +111,7 @@ std::wstring fasthangul::jamo::JamoConverter::decompose(std::wstring text) const
   std::transform(text.begin(), text.end(), stringsToJoin.begin(),
                  [this](const wchar_t character) { return getJamosFromHangul(character); });
   std::transform(stringsToJoin.begin(), stringsToJoin.end(), totalLength.begin(),
-                 [](const std::wstring &chunk) { return chunk.length(); });
+                 [](const std::wstring& chunk) { return chunk.length(); });
 
   resultString.reserve(std::accumulate(totalLength.begin(), totalLength.end(), 0));
   for (auto iter = stringsToJoin.begin(); iter != stringsToJoin.end(); ++iter)
@@ -130,7 +131,8 @@ wchar_t fasthangul::jamo::JamoConverter::getOneHangulFromJamo(wchar_t chosung, w
   return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex);
 }
 
-wchar_t fasthangul::jamo::JamoConverter::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung,
+wchar_t fasthangul::jamo::JamoConverter::getOneHangulFromJamo(wchar_t chosung,
+                                                              wchar_t jungsung,
                                                               wchar_t jongsung) const {
   const auto chosungIterator = this->CHOSUNG_MAP.find(chosung);
   const auto jongsungIterator = this->JONGSUNG_MAP.find(jongsung);
@@ -158,11 +160,17 @@ bool fasthangul::jamo::isHangul(const wchar_t character) {
   return character >= FIRST_HANGUL and character <= LAST_HANGUL;
 }
 
-bool fasthangul::jamo::isJamo(const wchar_t character) { return character >= L'ㄱ' and character <= L'ㅣ'; }
+bool fasthangul::jamo::isJamo(const wchar_t character) {
+  return character >= L'ㄱ' and character <= L'ㅣ';
+}
 
-bool fasthangul::jamo::isChosung(const wchar_t character) { return CHOSUNG_SET.find(character) != CHOSUNG_SET.end(); }
+bool fasthangul::jamo::isChosung(const wchar_t character) {
+  return CHOSUNG_SET.find(character) != CHOSUNG_SET.end();
+}
 
-bool fasthangul::jamo::isJungsung(const wchar_t character) { return character >= L'ㅏ' and character <= L'ㅣ'; }
+bool fasthangul::jamo::isJungsung(const wchar_t character) {
+  return character >= L'ㅏ' and character <= L'ㅣ';
+}
 
 bool fasthangul::jamo::isJongsung(const wchar_t character) {
   return JONGSUNG_SET.find(character) != JONGSUNG_SET.end();

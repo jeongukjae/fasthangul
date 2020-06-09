@@ -4,7 +4,6 @@ if(BUILD_TEST)
   enable_testing()
   add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/googletest")
 
-  include_directories(${PROJECT_SOURCE_DIR}/fasthangul)
   include_directories(${gtest_SOURCE_DIR}/include)
   include_directories(${gmock_SOURCE_DIR}/include)
 
