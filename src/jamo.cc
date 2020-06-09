@@ -147,3 +147,9 @@ wchar_t fasthangul::jamo::getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung
 
   return FIRST_HANGUL + 28 * (21 * chosungIndex + jungsungIndex) + jongsungIndex;
 }
+
+std::wstring fasthangul::jamo::getJamosFromHangul(const wchar_t character) {
+  if (isHangul(character))
+    return PRECOMPUTED_JAMOS[character];
+  return std::wstring{character};
+}

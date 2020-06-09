@@ -1,8 +1,8 @@
 #ifndef __FH_JAMO_H__
 #define __FH_JAMO_H__
 
-#include <string_view>
 #include <unordered_map>
+#include <vector>
 
 namespace fasthangul {
 namespace jamo {
@@ -18,6 +18,7 @@ bool isJungsung(const wchar_t character);
 bool isJongsung(const wchar_t character);
 wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung);
 wchar_t getOneHangulFromJamo(wchar_t chosung, wchar_t jungsung, wchar_t jongsung);
+std::wstring getJamosFromHangul(const wchar_t hangul);
 
 } // namespace jamo
 } // namespace fasthangul

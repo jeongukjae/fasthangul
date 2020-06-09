@@ -65,3 +65,14 @@ TEST(jamo, testGetOneHangulFromJamo) {
   ASSERT_EQ(L'뿌', getOneHangulFromJamo(L'ㅃ', L'ㅜ'));
   ASSERT_EQ(L'뿝', getOneHangulFromJamo(L'ㅃ', L'ㅜ', L'ㅂ'));
 }
+
+TEST(jamo, testGetJamosFromHangul) {
+  initializeJamos();
+
+  ASSERT_EQ(L"ㄱㅏ", getJamosFromHangul(L'가'));
+  ASSERT_EQ(L"ㄱㅏㄱ", getJamosFromHangul(L'각'));
+  ASSERT_EQ(L"ㅃㅜ", getJamosFromHangul(L'뿌'));
+  ASSERT_EQ(L"ㅃㅜㅂ", getJamosFromHangul(L'뿝'));
+  ASSERT_EQ(L" ", getJamosFromHangul(L' '));
+  ASSERT_EQ(L"ㄱ", getJamosFromHangul(L'ㄱ'));
+}
