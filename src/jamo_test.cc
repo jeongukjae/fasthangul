@@ -23,6 +23,13 @@ TEST(jamo, decomposeJamos) {
   ASSERT_STREQ(decompose(L"너 뭐해?").c_str(), L"ㄴㅓ ㅁㅝㅎㅐ?");
 }
 
+TEST(jamo, decomposeJamosWithEmptyJongsung) {
+  initializeJamos(true, L'e');
+
+  ASSERT_STREQ(decompose(L"아니 이게 아닌데").c_str(), L"ㅇㅏeㄴㅣe ㅇㅣeㄱㅔe ㅇㅏeㄴㅣㄴㄷㅔe");
+  ASSERT_STREQ(decompose(L"너 뭐해?").c_str(), L"ㄴㅓe ㅁㅝeㅎㅐe?");
+}
+
 TEST(jamo, testIsHangul) {
   ASSERT_TRUE(isHangul(L'가'));
   ASSERT_TRUE(isHangul(L'힣'));

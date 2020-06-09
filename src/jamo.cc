@@ -81,12 +81,7 @@ std::wstring fasthangul::jamo::decompose(std::wstring text) {
   std::vector<int> totalLength(text.size());
   std::wstring resultString{};
 
-  std::transform(text.begin(), text.end(), stringsToJoin.begin(), [](const wchar_t character) {
-    if (isHangul(character))
-      return PRECOMPUTED_JAMOS[character];
-    return std::wstring{character};
-  });
-
+  std::transform(text.begin(), text.end(), stringsToJoin.begin(), getJamosFromHangul);
   std::transform(stringsToJoin.begin(), stringsToJoin.end(), totalLength.begin(),
                  [](const std::wstring &chunk) { return chunk.length(); });
 
@@ -97,18 +92,26 @@ std::wstring fasthangul::jamo::decompose(std::wstring text) {
   return resultString;
 }
 
-void fasthangul::jamo::initializeJamos() {
+void fasthangul::jamo::initializeJamos(bool fillEmptyJongsung, wchar_t emptyJongsung) {
+  PRECOMPUTED_JAMOS.clear();
+  CHOSUNG_MAP.clear();
+  JONGSUNG_MAP.clear();
+
   wchar_t totalHangulCount = LAST_HANGUL - FIRST_HANGUL + 1;
   for (wchar_t charIndex = 0; charIndex < totalHangulCount; ++charIndex) {
     wchar_t chosungIndex = charIndex / 28 / 21;
     wchar_t jungsungIndex = charIndex / 28 % 21;
     wchar_t jongsungIndex = charIndex % 28;
 
-    if (jongsungIndex != 0)
+    if (fillEmptyJongsung && jongsungIndex == 0) {
+      PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] =
+          std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex], emptyJongsung});
+    } else if (jongsungIndex != 0) {
       PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] =
           std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex], JONGSUNG[jongsungIndex]});
-    else
+    } else {
       PRECOMPUTED_JAMOS[FIRST_HANGUL + charIndex] = std::wstring({CHOSUNG[chosungIndex], JUNGSUNG[jungsungIndex]});
+    }
   }
 
   for (int i = 0; i < 19; ++i) {

@@ -4,10 +4,12 @@
 #include <unordered_map>
 #include <vector>
 
+#define DEFAULT_EMPTY_JONGSUNG L'ᴥ'
+
 namespace fasthangul {
 namespace jamo {
 
-void initializeJamos();
+void initializeJamos(bool fillEmptyJongsung = false, wchar_t emptyJongsung = DEFAULT_EMPTY_JONGSUNG);
 std::wstring compose(std::wstring hangul);
 std::wstring decompose(std::wstring hangul);
 
