@@ -11,6 +11,10 @@ namespace jamo {
 
 class JamoConverter {
  public:
+  JamoConverter() {}
+  JamoConverter(bool fillEmptyJongsung, wchar_t emptyJongsung = DEFAULT_EMPTY_JONGSUNG) {
+    initializeJamos(fillEmptyJongsung, emptyJongsung);
+  }
   void initializeJamos(bool fillEmptyJongsung = false, wchar_t emptyJongsung = DEFAULT_EMPTY_JONGSUNG);
   std::wstring compose(std::wstring hangul) const;
   std::wstring decompose(std::wstring hangul) const;
@@ -31,6 +35,8 @@ bool isJamo(const wchar_t character);
 bool isChosung(const wchar_t character);
 bool isJungsung(const wchar_t character);
 bool isJongsung(const wchar_t character);
+
+extern const JamoConverter defaultJamoConverter;
 
 }  // namespace jamo
 }  // namespace fasthangul
