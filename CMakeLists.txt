@@ -8,9 +8,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake/modules/
 # files
 include_directories(./includes)
 set(SOURCE_CODE
-      src/jamo.cc)
+      src/jamo.cc
+      src/pronounciation.cc)
 set(TEST_CODE
-      src/jamo_test.cc)
+      src/jamo_test.cc
+      src/pronounciation_test.cc)
 
 # includes
 include(./cmake/Testing.cmake)
