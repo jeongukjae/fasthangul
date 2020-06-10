@@ -28,8 +28,11 @@ std::vector<DecomposedChar> decomposeText(std::wstring text,
 // text가 'ㅇ'이 아닌 초성으로 시작하는지
 // 여기서 text는 자모로 분리된 string
 bool startsWithJaeum(std::wstring text);
+// DecomposedChar의 초성을 교체
+void replaceChosung(DecomposedChar& character, wchar_t chosung);
 // DecomposedChar의 받침을 교체
 void replaceJongsung(DecomposedChar& character, wchar_t jongsung);
+void removeJongsung(DecomposedChar& character);
 
 }  // namespace pronounciation
 }  // namespace fasthangul
