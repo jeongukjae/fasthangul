@@ -22,6 +22,7 @@ bool operator==(const DecomposedChar& lhs, const DecomposedChar& rhs) {
 
 std::wstring convertPronounciation(std::wstring text);
 void convertJongsungPronounciation(std::vector<DecomposedChar>& text);
+void convertAssimilationPronounciation(std::vector<DecomposedChar>& text);
 
 std::vector<DecomposedChar> decomposeText(std::wstring text,
                                           jamo::JamoConverter converter = jamo::defaultJamoConverter);

@@ -37,11 +37,7 @@ class Rule9Test : public testing::TestWithParam<std::pair<std::wstring, std::wst
 
 TEST_P(Rule9Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule9,
@@ -67,11 +63,7 @@ class Rule10Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 
 TEST_P(Rule10Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule10,
@@ -88,7 +80,7 @@ INSTANTIATE_TEST_SUITE_P(PronounciationRule10,
                                          std::make_pair(L"밟다", L"밥다"),
                                          std::make_pair(L"밟소", L"밥소"),
                                          std::make_pair(L"밟지", L"밥지"),
-                                         std::make_pair(L"밟는", L"밥는"),
+                                         std::make_pair(L"밟는", L"밤는"),
                                          std::make_pair(L"밟게", L"밥게"),
                                          std::make_pair(L"밟고", L"밥고"),
                                          std::make_pair(L"넓죽하다", L"넙죽하다"),
@@ -101,11 +93,7 @@ class Rule11Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 
 TEST_P(Rule11Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule11,
@@ -130,11 +118,7 @@ class Rule12Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 
 TEST_P(Rule12Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule12,
@@ -173,11 +157,7 @@ class Rule13Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 
 TEST_P(Rule13Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule13,
@@ -200,11 +180,7 @@ class Rule14Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 
 TEST_P(Rule14Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule14,
@@ -225,11 +201,7 @@ class Rule16Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 
 TEST_P(Rule16Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
-  auto textVector = decomposeText(param.first);
-
-  convertJongsungPronounciation(textVector);
-
-  ASSERT_EQ(composeText(textVector), param.second);
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule16,
@@ -255,3 +227,84 @@ INSTANTIATE_TEST_SUITE_P(PronounciationRule16,
                                          std::make_pair(L"히읗이", L"히으시"),
                                          std::make_pair(L"히읗을", L"히으슬"),
                                          std::make_pair(L"히읗에", L"히으세")));
+
+// 제17항
+// 받침 ‘ㄷ, ㅌ(ㄾ)’이 조사나 접미사의 모음 ‘ㅣ’와 결합되는 경우에는, [ㅈ, ㅊ]으로 바꾸어서 뒤 음절 첫소리로 옮겨
+// 발음한다.
+class Rule17Test : public testing::TestWithParam<std::pair<std::wstring, std::wstring>> {};
+
+TEST_P(Rule17Test, test) {
+  std::pair<std::wstring, std::wstring> param = GetParam();
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
+}
+
+INSTANTIATE_TEST_SUITE_P(PronounciationRule17,
+                         Rule17Test,
+                         testing::Values(std::make_pair(L"곧이듣다", L"고지듣다"),
+                                         std::make_pair(L"굳이", L"구지"),
+                                         std::make_pair(L"미닫이", L"미다지"),
+                                         std::make_pair(L"땀받이", L"땀바지"),
+                                         std::make_pair(L"밭이", L"바치"),
+                                         //  TODO 제 14항과 겹침
+                                         //  std::make_pair(L"벼훑이", L"벼훌치"),
+                                         std::make_pair(L"굳히다", L"구치다"),
+                                         std::make_pair(L"닫히다", L"다치다"),
+                                         std::make_pair(L"묻히다", L"무치다")));
+
+// 제 18항
+// 받침 ‘ㄱ(ㄲ, ㅋ, ㄳ, ㄺ), ㄷ(ㅅ, ㅆ, ㅈ, ㅊ, ㅌ, ㅎ), ㅂ(ㅍ, ㄼ, ㄿ, ㅄ)’은 ‘ㄴ, ㅁ’ 앞에서 [ㅇ, ㄴ, ㅁ]으로
+// 발음한다.
+class Rule18Test : public testing::TestWithParam<std::pair<std::wstring, std::wstring>> {};
+
+TEST_P(Rule18Test, test) {
+  std::pair<std::wstring, std::wstring> param = GetParam();
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
+}
+
+INSTANTIATE_TEST_SUITE_P(PronounciationRule18,
+                         Rule18Test,
+                         testing::Values(std::make_pair(L"먹는", L"멍는"),
+                                         std::make_pair(L"국물", L"궁물"),
+                                         std::make_pair(L"깎는", L"깡는"),
+                                         std::make_pair(L"키읔만", L"키응만"),
+                                         std::make_pair(L"몫몫이", L"몽목씨"),
+                                         std::make_pair(L"긁는", L"긍는"),
+                                         std::make_pair(L"흙만", L"흥만"),
+                                         std::make_pair(L"닫는", L"단는"),
+                                         std::make_pair(L"짓는", L"진는"),
+                                         std::make_pair(L"옷맵시", L"온맵시"),
+                                         std::make_pair(L"있는", L"인는"),
+                                         std::make_pair(L"맞는", L"만는"),
+                                         std::make_pair(L"젖멍울", L"전멍울"),
+                                         std::make_pair(L"쫓는", L"쫀는"),
+                                         std::make_pair(L"꽃망울", L"꼰망울"),
+                                         std::make_pair(L"붙는", L"분는"),
+                                         std::make_pair(L"놓는", L"논는"),
+                                         std::make_pair(L"잡는", L"잠는"),
+                                         std::make_pair(L"밥물", L"밤물"),
+                                         std::make_pair(L"앞마당", L"암마당"),
+                                         std::make_pair(L"밟는", L"밤는"),
+                                         std::make_pair(L"읊는", L"음는"),
+                                         std::make_pair(L"없는", L"엄는"),
+                                         std::make_pair(L"값매다", L"감매다")));
+
+// 제 19항
+// 받침 ‘ㅁ, ㅇ’ 뒤에 연결되는 ‘ㄹ’은 [ㄴ]으로 발음한다.
+class Rule19Test : public testing::TestWithParam<std::pair<std::wstring, std::wstring>> {};
+
+TEST_P(Rule19Test, test) {
+  std::pair<std::wstring, std::wstring> param = GetParam();
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
+}
+
+INSTANTIATE_TEST_SUITE_P(PronounciationRule19,
+                         Rule19Test,
+                         testing::Values(std::make_pair(L"담력", L"담녁"),
+                                         std::make_pair(L"침략", L"침냑"),
+                                         std::make_pair(L"강릉", L"강능"),
+                                         std::make_pair(L"항로", L"항노"),
+                                         std::make_pair(L"대통령", L"대통녕"),
+                                         std::make_pair(L"막론", L"망논"),
+                                         std::make_pair(L"백리", L"뱅니"),
+                                         std::make_pair(L"협력", L"혐녁"),
+                                         std::make_pair(L"십리", L"심니")));
