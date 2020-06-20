@@ -25,6 +25,7 @@ void convertJongsungPronounciation(std::vector<DecomposedChar>& text);
 
 std::vector<DecomposedChar> decomposeText(std::wstring text,
                                           jamo::JamoConverter converter = jamo::defaultJamoConverter);
+std::wstring composeText(std::vector<DecomposedChar> textVector);
 // text가 'ㅇ'이 아닌 초성으로 시작하는지
 // 여기서 text는 자모로 분리된 string
 bool startsWithJaeum(std::wstring text);

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <map>
+#include <numeric>
 #include <set>
 
 #include "fasthangul/jamo.hh"
@@ -26,12 +27,23 @@ const std::map<wchar_t, std::pair<wchar_t, wchar_t>> COMPOSED_JONGSUNG = {
     {L'ㄵ', {L'ㄴ', L'ㅈ'}}, {L'ㄶ', {L'ㄴ', L'ㅎ'}}, {L'ㄳ', {L'ㄱ', L'ㅆ'}}, {L'ㄺ', {L'ㄹ', L'ㄱ'}},
     {L'ㄻ', {L'ㄹ', L'ㅁ'}}, {L'ㄼ', {L'ㄹ', L'ㅂ'}}, {L'ㄽ', {L'ㄹ', L'ㅆ'}}, {L'ㄾ', {L'ㄹ', L'ㅌ'}},
     {L'ㄿ', {L'ㄹ', L'ㅍ'}}, {L'ㅀ', {L'ㄹ', L'ㅎ'}}, {L'ㅄ', {L'ㅂ', L'ㅆ'}}};
+// 제 16항에서 사용하는 특수 패턴들
+const std::map<std::wstring, wchar_t> RULE_16_EXCEPTION = {{L"디귿", L'ㅅ'}, {L"지읒", L'ㅅ'}, {L"치읓", L'ㅅ'},
+                                                           {L"키읔", L'ㄱ'}, {L"티읕", L'ㅅ'}, {L"피읖", L'ㅂ'},
+                                                           {L"히읗", L'ㅅ'}};
 
-std::wstring convertPronounciation(std::wstring text) {}
+std::wstring convertPronounciation(std::wstring text) {
+  std::vector<DecomposedChar> textVector = decomposeText(text);
+
+  convertJongsungPronounciation(textVector);
+
+  return composeText(textVector);
+}
 
 void convertJongsungPronounciation(std::vector<DecomposedChar>& textVector) {
   std::map<wchar_t, wchar_t>::const_iterator iterator;
   std::map<wchar_t, std::pair<wchar_t, wchar_t>>::const_iterator pairIterator;
+  std::map<std::wstring, wchar_t>::const_iterator wstringIterator;
 
   for (size_t i = 0; i < textVector.size(); i++) {
     auto text = textVector[i];
@@ -41,9 +53,17 @@ void convertJongsungPronounciation(std::vector<DecomposedChar>& textVector) {
       bool isLastChar = (i == textVector.size() - 1);
       bool isEomal = isLastChar || (textVector[i + 1].decomposed.size() == 1);
 
+      // 제 16항
+      if (!isEomal && i > 0 && textVector[i + 1].decomposed[0] == L'ㅇ' &&
+          (wstringIterator = RULE_16_EXCEPTION.find(std::wstring{textVector[i - 1].composed, text.composed})) !=
+              RULE_16_EXCEPTION.end()) {
+        removeJongsung(textVector[i]);
+        replaceChosung(textVector[i + 1], wstringIterator->second);
+      }
+
       // 9항, 10항, 11항의 받침으로 끝나고, (어말이거나, 자음 앞인경우)
-      if ((iterator = RULE_JONGSUNG.find(text.decomposed[2])) != RULE_JONGSUNG.end() &&
-          (isEomal || startsWithJaeum(textVector[i + 1].decomposed))) {
+      else if ((iterator = RULE_JONGSUNG.find(text.decomposed[2])) != RULE_JONGSUNG.end() &&
+               (isEomal || startsWithJaeum(textVector[i + 1].decomposed))) {
         replaceJongsung(textVector[i], iterator->second);
       }
 
@@ -134,6 +154,11 @@ void convertJongsungPronounciation(std::vector<DecomposedChar>& textVector) {
         replaceJongsung(textVector[i], pairIterator->second.first);
         replaceChosung(textVector[i + 1], pairIterator->second.second);
       }
+      // 제 15항
+      // 받침 뒤에 모음 ‘ㅏ, ㅓ, ㅗ, ㅜ, ㅟ’들로 시작되는 실질 형태소가 연결되는 경우에는, 대표음으로 바꾸어서 뒤 음절
+      // 첫소리로 옮겨 발음한다.
+      //
+      // "밭 아래[바다래]", "늪 앞[느밥]" 같은 예시가 있어서 구현하기 까다로워 TODO 로 남겨놓음
     }
   }
 }
@@ -147,6 +172,11 @@ std::vector<DecomposedChar> decomposeText(std::wstring text, jamo::JamoConverter
   });
 
   return decomposed;
+}
+
+std::wstring composeText(std::vector<DecomposedChar> decomposed) {
+  return std::accumulate(decomposed.begin(), decomposed.end(), std::wstring(L""),
+                         [](const std::wstring init, const DecomposedChar second) { return init + second.composed; });
 }
 
 bool startsWithJaeum(std::wstring text) {

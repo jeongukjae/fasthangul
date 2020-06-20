@@ -38,11 +38,10 @@ class Rule9Test : public testing::TestWithParam<std::pair<std::wstring, std::wst
 TEST_P(Rule9Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
   auto textVector = decomposeText(param.first);
-  auto expected = decomposeText(param.second);
 
   convertJongsungPronounciation(textVector);
 
-  ASSERT_THAT(textVector, testing::ElementsAreArray(expected.data(), expected.size()));
+  ASSERT_EQ(composeText(textVector), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule9,
@@ -69,11 +68,10 @@ class Rule10Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 TEST_P(Rule10Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
   auto textVector = decomposeText(param.first);
-  auto expected = decomposeText(param.second);
 
   convertJongsungPronounciation(textVector);
 
-  ASSERT_THAT(textVector, testing::ElementsAreArray(expected.data(), expected.size()));
+  ASSERT_EQ(composeText(textVector), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule10,
@@ -104,11 +102,10 @@ class Rule11Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 TEST_P(Rule11Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
   auto textVector = decomposeText(param.first);
-  auto expected = decomposeText(param.second);
 
   convertJongsungPronounciation(textVector);
 
-  ASSERT_THAT(textVector, testing::ElementsAreArray(expected.data(), expected.size()));
+  ASSERT_EQ(composeText(textVector), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule11,
@@ -134,11 +131,10 @@ class Rule12Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 TEST_P(Rule12Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
   auto textVector = decomposeText(param.first);
-  auto expected = decomposeText(param.second);
 
   convertJongsungPronounciation(textVector);
 
-  ASSERT_THAT(textVector, testing::ElementsAreArray(expected.data(), expected.size()));
+  ASSERT_EQ(composeText(textVector), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule12,
@@ -178,11 +174,10 @@ class Rule13Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 TEST_P(Rule13Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
   auto textVector = decomposeText(param.first);
-  auto expected = decomposeText(param.second);
 
   convertJongsungPronounciation(textVector);
 
-  ASSERT_THAT(textVector, testing::ElementsAreArray(expected.data(), expected.size()));
+  ASSERT_EQ(composeText(textVector), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule13,
@@ -206,11 +201,10 @@ class Rule14Test : public testing::TestWithParam<std::pair<std::wstring, std::ws
 TEST_P(Rule14Test, test) {
   std::pair<std::wstring, std::wstring> param = GetParam();
   auto textVector = decomposeText(param.first);
-  auto expected = decomposeText(param.second);
 
   convertJongsungPronounciation(textVector);
 
-  ASSERT_THAT(textVector, testing::ElementsAreArray(expected.data(), expected.size()));
+  ASSERT_EQ(composeText(textVector), param.second);
 }
 
 INSTANTIATE_TEST_SUITE_P(PronounciationRule14,
@@ -224,3 +218,40 @@ INSTANTIATE_TEST_SUITE_P(PronounciationRule14,
                                          std::make_pair(L"읊어", L"을퍼"),
                                          std::make_pair(L"값을", L"갑쓸"),
                                          std::make_pair(L"없어", L"업써")));
+
+// 제16항
+// 한글 자모의 이름은 그 받침소리를 연음하되, ‘ㄷ, ㅈ, ㅊ, ㅋ, ㅌ, ㅍ, ㅎ’의 경우에는 특별히 다음과 같이 발음한다.
+class Rule16Test : public testing::TestWithParam<std::pair<std::wstring, std::wstring>> {};
+
+TEST_P(Rule16Test, test) {
+  std::pair<std::wstring, std::wstring> param = GetParam();
+  auto textVector = decomposeText(param.first);
+
+  convertJongsungPronounciation(textVector);
+
+  ASSERT_EQ(composeText(textVector), param.second);
+}
+
+INSTANTIATE_TEST_SUITE_P(PronounciationRule16,
+                         Rule16Test,
+                         testing::Values(std::make_pair(L"디귿이", L"디그시"),
+                                         std::make_pair(L"디귿을", L"디그슬"),
+                                         std::make_pair(L"디귿에", L"디그세"),
+                                         std::make_pair(L"지읒이", L"지으시"),
+                                         std::make_pair(L"지읒을", L"지으슬"),
+                                         std::make_pair(L"지읒에", L"지으세"),
+                                         std::make_pair(L"치읓이", L"치으시"),
+                                         std::make_pair(L"치읓을", L"치으슬"),
+                                         std::make_pair(L"치읓에", L"치으세"),
+                                         std::make_pair(L"키읔이", L"키으기"),
+                                         std::make_pair(L"키읔을", L"키으글"),
+                                         std::make_pair(L"키읔에", L"키으게"),
+                                         std::make_pair(L"티읕이", L"티으시"),
+                                         std::make_pair(L"티읕을", L"티으슬"),
+                                         std::make_pair(L"티읕에", L"티으세"),
+                                         std::make_pair(L"피읖이", L"피으비"),
+                                         std::make_pair(L"피읖을", L"피으블"),
+                                         std::make_pair(L"피읖에", L"피으베"),
+                                         std::make_pair(L"히읗이", L"히으시"),
+                                         std::make_pair(L"히읗을", L"히으슬"),
+                                         std::make_pair(L"히읗에", L"히으세")));
