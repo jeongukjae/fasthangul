@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 fasthangul_jamo = Extension(
     "fasthangul.jamo",
     sources=["./src/jamo.cc", "fasthangul/jamo.cc"],
-    include_dirs=["./includes"],
+    include_dirs=["./include"],
     extra_compile_args=["-std=c++17"],
     language="c++",
 )
@@ -15,7 +15,7 @@ setup(
     packages=["fasthangul"],
     ext_modules=[fasthangul_jamo],
     package_data={
-        "": ["includes"],
+        "": ["include"],
         "fasthangul": ["**.hh"],
     },
     url="https://github.com/jeongukjae/fasthangul",
