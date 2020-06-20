@@ -1,2 +1,2 @@
 ignore:
-  - "*test.cc"
+  - "**/*_test.cc"
