@@ -138,8 +138,8 @@ INSTANTIATE_TEST_SUITE_P(PronounciationRule12,
                                          std::make_pair(L"싫소", L"실쏘"),
                                          std::make_pair(L"않네", L"안네"),
                                          std::make_pair(L"않는", L"안는"),
-                                         std::make_pair(L"뚫네", L"뚤네"),
-                                         std::make_pair(L"뚫는", L"뚤는"),
+                                         std::make_pair(L"뚫네", L"뚤레"),
+                                         std::make_pair(L"뚫는", L"뚤른"),
                                          std::make_pair(L"낳은", L"나은"),
                                          std::make_pair(L"놓아", L"노아"),
                                          std::make_pair(L"쌓이다", L"싸이다"),
@@ -308,3 +308,43 @@ INSTANTIATE_TEST_SUITE_P(PronounciationRule19,
                                          std::make_pair(L"백리", L"뱅니"),
                                          std::make_pair(L"협력", L"혐녁"),
                                          std::make_pair(L"십리", L"심니")));
+
+// 제 20항
+// ‘ㄴ’은 ‘ㄹ’의 앞이나 뒤에서 [ㄹ]로 발음한다.
+class Rule20Test : public testing::TestWithParam<std::pair<std::wstring, std::wstring>> {};
+
+TEST_P(Rule20Test, test) {
+  std::pair<std::wstring, std::wstring> param = GetParam();
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
+}
+
+INSTANTIATE_TEST_SUITE_P(PronounciationRule20,
+                         Rule20Test,
+                         testing::Values(std::make_pair(L"난로", L"날로"),
+                                         std::make_pair(L"신라", L"실라"),
+                                         std::make_pair(L"천리", L"철리"),
+                                         std::make_pair(L"광한루", L"광할루"),
+                                         std::make_pair(L"대관령", L"대괄령"),
+                                         std::make_pair(L"칼날", L"칼랄"),
+                                         std::make_pair(L"물난리", L"물랄리"),
+                                         std::make_pair(L"줄넘기", L"줄럼기"),
+                                         std::make_pair(L"할는지", L"할른지")));
+
+// 제 21항
+// 위에서 지적한 이외의 자음동화는 인정하지 않는다.
+class Rule21Test : public testing::TestWithParam<std::pair<std::wstring, std::wstring>> {};
+
+TEST_P(Rule21Test, test) {
+  std::pair<std::wstring, std::wstring> param = GetParam();
+  ASSERT_EQ(convertPronounciation(param.first), param.second);
+}
+
+INSTANTIATE_TEST_SUITE_P(PronounciationRule21,
+                         Rule21Test,
+                         testing::Values(std::make_pair(L"감기", L"감기"),
+                                         std::make_pair(L"옷감", L"옫감"),
+                                         std::make_pair(L"있고", L"읻고"),
+                                         std::make_pair(L"꽃길", L"꼳길"),
+                                         std::make_pair(L"젖먹이", L"전머기"),
+                                         std::make_pair(L"문법", L"문법"),
+                                         std::make_pair(L"꽃밭", L"꼳받")));

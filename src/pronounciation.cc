@@ -33,7 +33,10 @@ const std::map<std::wstring, wchar_t> RULE_16_EXCEPTION = {{L"디귿", L'ㅅ'}, 
                                                            {L"히읗", L'ㅅ'}};
 // 제 18항
 const std::map<wchar_t, wchar_t> RULE_18_PATTERN = {{L'ㄱ', L'ㅇ'}, {L'ㄷ', L'ㄴ'}, {L'ㅂ', L'ㅁ'}};
+// 제 19항
 const std::set<wchar_t> RULE_19_JONGSUNG = {L'ㅁ', L'ㅇ', L'ㄱ', L'ㅂ'};
+// 제 20항
+const std::set<wchar_t> RULE_20_JONGSUNG = {L'ㄹ', L'ㅀ', L'ㄾ'};
 
 std::wstring convertPronounciation(std::wstring text) {
   std::vector<DecomposedChar> textVector = decomposeText(text);
@@ -209,12 +212,23 @@ void convertAssimilationPronounciation(std::vector<DecomposedChar>& textVector) 
         replaceChosung(textVector[i + 1], L'ㅊ');
       }
 
-      // 18항 받침 ‘ㄱ(ㄲ, ㅋ, ㄳ, ㄺ), ㄷ(ㅅ, ㅆ, ㅈ, ㅊ, ㅌ, ㅎ), ㅂ(ㅍ, ㄼ, ㄿ, ㅄ)’은 ‘ㄴ, ㅁ’ 앞에서 [ㅇ, ㄴ,
-      // ㅁ]으로 발음한다.
-      // 위의 함수에서 이미 ㄱ, ㄷ, ㅂ으로 변환하고 난 후이니 ㄱ, ㄷ, ㅂ만 체크한다.
+      // 18항
+      // 받침 ‘ㄱ(ㄲ, ㅋ, ㄳ, ㄺ), ㄷ(ㅅ, ㅆ, ㅈ, ㅊ, ㅌ, ㅎ), ㅂ(ㅍ, ㄼ, ㄿ, ㅄ)’은 ‘ㄴ, ㅁ’ 앞에서 [ㅇ, ㄴ, ㅁ]으로
+      // 발음한다. 위의 함수에서 이미 ㄱ, ㄷ, ㅂ으로 변환하고 난 후이니 ㄱ, ㄷ, ㅂ만 체크한다.
       else if (!isEomal && (textVector[i + 1].decomposed[0] == L'ㄴ' || textVector[i + 1].decomposed[0] == L'ㅁ') &&
                (iterator = RULE_18_PATTERN.find(text.decomposed[2])) != RULE_18_PATTERN.end()) {
         replaceJongsung(textVector[i], iterator->second);
+      }
+
+      // 제 20항
+      // ‘ㄴ’은 ‘ㄹ’의 앞이나 뒤에서 [ㄹ]로 발음한다.
+      // TODO 붙임의 예외 케이스 확인
+      if (!isEomal && (RULE_20_JONGSUNG.find(text.decomposed[2]) != RULE_20_JONGSUNG.end()) &&
+          textVector[i + 1].decomposed[0] == L'ㄴ') {
+        replaceChosung(textVector[i + 1], L'ㄹ');
+      }
+      if (!isEomal && text.decomposed[2] == L'ㄴ' && textVector[i + 1].decomposed[0] == L'ㄹ') {
+        replaceJongsung(textVector[i], L'ㄹ');
       }
     }
   }
