@@ -19,6 +19,9 @@ const std::map<wchar_t, wchar_t> RULE_JONGSUNG = {{L'ㄲ', L'ㄱ'}, {L'ㅋ', L'�
                                                   {L'ㅄ', L'ㅂ'}, {L'ㄻ', L'ㅁ'}, {L'ㄿ', L'ㅂ'}};
 // 12항에서 사용하는 종성
 const std::map<wchar_t, wchar_t> RULE_12_JONGSUNG = {{L'ㅎ', L'\0'}, {L'ㅀ', L'ㄹ'}, {L'ㄶ', L'ㄴ'}};
+const std::map<wchar_t, std::pair<wchar_t, wchar_t>> RULE_12_CONVERSION = {
+    {L'ㄱ', {L'\0', L'ㅋ'}}, {L'ㄺ', {L'ㄹ', L'ㅋ'}}, {L'ㄷ', {L'\0', L'ㅌ'}}, {L'ㅂ', {L'\0', L'ㅍ'}},
+    {L'ㄼ', {L'ㄹ', L'ㅍ'}}, {L'ㅈ', {L'\0', L'ㅊ'}}, {L'ㄵ', {L'ㄴ', L'ㅊ'}}};
 // 제 13항에서 사용하는 종성으로, 홑받침 혹은 쌍받침
 const std::set<wchar_t> SINGLE_OR_DOUBLE_JONGSUNG = {L'ㄱ', L'ㄲ', L'ㄴ', L'ㄷ', L'ㄹ', L'ㅁ', L'ㅂ', L'ㅅ',
                                                      L'ㅆ', L'ㅈ', L'ㅊ', L'ㅋ', L'ㅌ', L'ㅍ', L'ㅎ'};
@@ -27,22 +30,25 @@ const std::map<wchar_t, std::pair<wchar_t, wchar_t>> COMPOSED_JONGSUNG = {
     {L'ㄵ', {L'ㄴ', L'ㅈ'}}, {L'ㄶ', {L'ㄴ', L'ㅎ'}}, {L'ㄳ', {L'ㄱ', L'ㅆ'}}, {L'ㄺ', {L'ㄹ', L'ㄱ'}},
     {L'ㄻ', {L'ㄹ', L'ㅁ'}}, {L'ㄼ', {L'ㄹ', L'ㅂ'}}, {L'ㄽ', {L'ㄹ', L'ㅆ'}}, {L'ㄾ', {L'ㄹ', L'ㅌ'}},
     {L'ㄿ', {L'ㄹ', L'ㅍ'}}, {L'ㅀ', {L'ㄹ', L'ㅎ'}}, {L'ㅄ', {L'ㅂ', L'ㅆ'}}};
-// 제 16항에서 사용하는 특수 패턴들
 const std::map<std::wstring, wchar_t> RULE_16_EXCEPTION = {{L"디귿", L'ㅅ'}, {L"지읒", L'ㅅ'}, {L"치읓", L'ㅅ'},
                                                            {L"키읔", L'ㄱ'}, {L"티읕", L'ㅅ'}, {L"피읖", L'ㅂ'},
                                                            {L"히읗", L'ㅅ'}};
-// 제 18항
 const std::map<wchar_t, wchar_t> RULE_18_PATTERN = {{L'ㄱ', L'ㅇ'}, {L'ㄷ', L'ㄴ'}, {L'ㅂ', L'ㅁ'}};
-// 제 19항
 const std::set<wchar_t> RULE_19_JONGSUNG = {L'ㅁ', L'ㅇ', L'ㄱ', L'ㅂ'};
-// 제 20항
 const std::set<wchar_t> RULE_20_JONGSUNG = {L'ㄹ', L'ㅀ', L'ㄾ'};
+const std::map<wchar_t, wchar_t> RULE_23_PATTERN = {{L'ㄱ', L'ㄲ'},
+                                                    {L'ㄷ', L'ㄸ'},
+                                                    {L'ㅂ', L'ㅃ'},
+                                                    {L'ㅅ', L'ㅆ'},
+                                                    {L'ㅈ', L'ㅉ'}};
+const std::map<wchar_t, wchar_t> RULE_24_PATTERN = {{L'ㄱ', L'ㄲ'}, {L'ㄷ', L'ㄸ'}, {L'ㅅ', L'ㅆ'}, {L'ㅈ', L'ㅉ'}};
 
 std::wstring convertPronounciation(std::wstring text) {
   std::vector<DecomposedChar> textVector = decomposeText(text);
 
   convertJongsungPronounciation(textVector);
   convertAssimilationPronounciation(textVector);
+  convertHardConsonantPronounciation(textVector);
 
   return composeText(textVector);
 }
@@ -186,6 +192,19 @@ void convertJongsungPronounciation(std::vector<DecomposedChar>& textVector) {
       // 첫소리로 옮겨 발음한다.
       //
       // "밭 아래[바다래]", "늪 앞[느밥]" 같은 예시가 있어서 구현하기 까다로워 TODO 로 남겨놓음
+
+      // 제 12항 붙임 1
+      if (!isEomal && (textVector[i + 1].decomposed[0] == L'ㅎ') &&
+          (pairIterator = RULE_12_CONVERSION.find(text.decomposed[2])) != RULE_12_CONVERSION.end()) {
+        // 제 17항 예외
+        if (textVector[i + 1].decomposed[1] == L'ㅣ' && pairIterator->first == L'ㄷ') {
+          removeJongsung(textVector[i]);
+          replaceChosung(textVector[i + 1], L'ㅊ');
+        } else {
+          replaceJongsung(textVector[i], pairIterator->second.first);
+          replaceChosung(textVector[i + 1], pairIterator->second.second);
+        }
+      }
     }
   }
 }
@@ -230,6 +249,37 @@ void convertAssimilationPronounciation(std::vector<DecomposedChar>& textVector) 
       if (!isEomal && text.decomposed[2] == L'ㄴ' && textVector[i + 1].decomposed[0] == L'ㄹ') {
         replaceJongsung(textVector[i], L'ㄹ');
       }
+    }
+  }
+}
+
+void convertHardConsonantPronounciation(std::vector<DecomposedChar>& textVector) {
+  std::map<wchar_t, wchar_t>::const_iterator mapIterator;
+  for (size_t i = 0; i < textVector.size(); i++) {
+    auto text = textVector[i];
+    if (text.decomposed.size() == 3) {
+      bool isLastChar = (i == textVector.size() - 1);
+      bool isEomal = isLastChar || (textVector[i + 1].decomposed.size() == 1);
+
+      // 제23항
+      // 받침 ‘ㄱ(ㄲ, ㅋ, ㄳ, ㄺ), ㄷ(ㅅ, ㅆ, ㅈ, ㅊ, ㅌ), ㅂ(ㅍ, ㄼ, ㄿ,ㅄ)’ 뒤에 연결되는 ‘ㄱ, ㄷ, ㅂ, ㅅ, ㅈ’은
+      // 된소리로 발음한다.
+      if (!isEomal && (text.decomposed[2] == L'ㄱ' || text.decomposed[2] == L'ㄷ' || text.decomposed[2] == L'ㅂ') &&
+          ((mapIterator = RULE_23_PATTERN.find(textVector[i + 1].decomposed[0])) != RULE_23_PATTERN.end())) {
+        replaceChosung(textVector[i + 1], mapIterator->second);
+      }
+
+      // 제24항
+      // 어간 받침 ‘ㄴ(ㄵ), ㅁ(ㄻ)’ 뒤에 결합되는 어미의 첫소리 ‘ㄱ, ㄷ, ㅅ, ㅈ’은 된소리로 발음한다.
+      // 이거도 어간 & 어미 판정이 들어가야 해서 TODO로 남겨놓음
+      //
+      // else if (!isEomal && (text.decomposed[2] == L'ㄴ' || text.decomposed[2] == L'ㅁ') &&
+      //          ((mapIterator = RULE_24_PATTERN.find(textVector[i + 1].decomposed[0])) != RULE_24_PATTERN.end())) {
+      //   replaceChosung(textVector[i + 1], mapIterator->second);
+      // }
+      //
+      // 28항까지 TODO
+      // 이거는 단순 룰로 하기는 어려울 듯
     }
   }
 }
