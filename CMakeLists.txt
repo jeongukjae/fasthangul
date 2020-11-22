@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # files
 include_directories(./include)
 set(TEST_CODE
-      src/jamo_test.cc)
+      tests/jamo_test.cc)
 
 option(BUILD_TEST "Build the tests" OFF)
 
