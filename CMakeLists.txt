@@ -1,30 +1,25 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(fasthangul VERSION 1.0.0 LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake/modules/")
 
 # files
 include_directories(./include)
-set(SOURCE_CODE
-      src/jamo.cc
-      src/pronounciation.cc)
 set(TEST_CODE
-      src/jamo_test.cc
-      src/pronounciation_test.cc)
+      src/jamo_test.cc)
 
-# includes
-include(./cmake/Testing.cmake)
-include(./cmake/CodeCoverage.cmake)
+option(BUILD_TEST "Build the tests" OFF)
 
-# link libraries
-# find_package(MKL REQUIRED)
-# find_package(TBB REQUIRED)
+if(BUILD_TEST)
+  enable_testing()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/googletest")
 
-# include_directories(${MKL_INCLUDE_DIRS})
-# include_directories(${TBB_INCLUDE_DIR})
+  include_directories(${gtest_SOURCE_DIR}/include)
+  include_directories(${gmock_SOURCE_DIR}/include)
 
-# fasthangul
-add_library(fasthangul SHARED ${SOURCE_CODE})
-target_link_libraries(fasthangul ${MKL_LIBRARIES} ${TBB_LIBRARY})
+  add_executable(run-test ${TEST_CODE})
+  target_link_libraries(run-test gtest gmock gtest_main)
+
+  add_test(NAME run-test COMMAND ./run-test)
+endif()

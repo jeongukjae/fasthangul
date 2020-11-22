@@ -14,16 +14,12 @@ jobs:
       - name: git pull submodules
         run: git submodule update --init --recursive
 
-      # - name: install mkl
-      #   run: ./scripts/install-mkl.sh
-      # - name: install tbb
-      #   run: ./scripts/install-tbb.sh
-
       - name: setup cmake
         run: |
           mkdir build
           cd build
           cmake .. -DBUILD_TEST=ON
+
       - name: run tests
         run: |
           cd build
@@ -38,10 +34,6 @@ jobs:
       - name: git pull submodules
         run: git submodule update --init --recursive
 
-      # - name: install mkl
-      #   run: ./scripts/install-mkl.sh
-      # - name: install tbb
-      #   run: ./scripts/install-tbb.sh
       - name: install lcov
         run: sudo apt-get install lcov
 
@@ -50,6 +42,7 @@ jobs:
           mkdir build
           cd build
           cmake .. -DBUILD_TEST=ON -DBUILD_COVERAGE=ON
+
       - name: run tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

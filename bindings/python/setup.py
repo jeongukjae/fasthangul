@@ -1,8 +1,9 @@
+import os
 from setuptools import setup, Extension
 
 fasthangul_jamo = Extension(
     "fasthangul.jamo",
-    sources=["./src/jamo.cc", "fasthangul/jamo.cc"],
+    sources=["fasthangul/jamo.cc"],
     include_dirs=["./include"],
     extra_compile_args=["-std=c++17"],
     language="c++",
@@ -14,10 +15,6 @@ setup(
     python_requires=">=3.5",
     packages=["fasthangul"],
     ext_modules=[fasthangul_jamo],
-    package_data={
-        "": ["include"],
-        "fasthangul": ["**.hh"],
-    },
     url="https://github.com/jeongukjae/fasthangul",
     author="Jeong Ukjae",
     author_email="jeongukjae@gmail.com",

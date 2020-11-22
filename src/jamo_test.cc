@@ -4,8 +4,17 @@
 
 using namespace fasthangul::jamo;
 
+const wchar_t CHOSUNG[] = {L'ㄱ', L'ㄲ', L'ㄴ', L'ㄷ', L'ㄸ', L'ㄹ', L'ㅁ', L'ㅂ', L'ㅃ', L'ㅅ',
+                           L'ㅆ', L'ㅇ', L'ㅈ', L'ㅉ', L'ㅊ', L'ㅋ', L'ㅌ', L'ㅍ', L'ㅎ'};
+const wchar_t JUNGSUNG[] = {L'ㅏ', L'ㅐ', L'ㅑ', L'ㅒ', L'ㅓ', L'ㅔ', L'ㅕ', L'ㅖ', L'ㅗ', L'ㅘ', L'ㅙ',
+                            L'ㅚ', L'ㅛ', L'ㅜ', L'ㅝ', L'ㅞ', L'ㅟ', L'ㅠ', L'ㅡ', L'ㅢ', L'ㅣ'};
+const wchar_t JONGSUNG[] = {L'\0', L'ㄱ', L'ㄲ', L'ㄳ', L'ㄴ', L'ㄵ', L'ㄶ', L'ㄷ', L'ㄹ', L'ㄺ',
+                            L'ㄻ', L'ㄼ', L'ㄽ', L'ㄾ', L'ㄿ', L'ㅀ', L'ㅁ', L'ㅂ', L'ㅄ', L'ㅅ',
+                            L'ㅆ', L'ㅇ', L'ㅈ', L'ㅊ', L'ㅋ', L'ㅌ', L'ㅍ', L'ㅎ'};
+
 TEST(jamo, composeJamos) {
   JamoConverter converter;
+
   converter.initializeJamos();
 
   ASSERT_STREQ(converter.compose(L"ㅇㅏㄴㄴㅕㅇ").c_str(), L"안녕");
@@ -35,37 +44,41 @@ TEST(jamo, decomposeJamosWithEmptyJongsung) {
 }
 
 TEST(jamo, testIsHangul) {
-  ASSERT_TRUE(isHangul(L'가'));
-  ASSERT_TRUE(isHangul(L'힣'));
-  ASSERT_TRUE(isHangul(L'와'));
-  ASSERT_FALSE(isHangul(L'ㄱ'));
-  ASSERT_FALSE(isHangul(L'a'));
-  ASSERT_FALSE(isHangul(L' '));
+  JamoConverter converter;
+
+  ASSERT_TRUE(converter.isHangul(L'가'));
+  ASSERT_TRUE(converter.isHangul(L'힣'));
+  ASSERT_TRUE(converter.isHangul(L'와'));
+  ASSERT_FALSE(converter.isHangul(L'ㄱ'));
+  ASSERT_FALSE(converter.isHangul(L'a'));
+  ASSERT_FALSE(converter.isHangul(L' '));
 }
 
 TEST(jamo, testIsJamoLike) {
+  JamoConverter converter;
+
   // is jamo
-  ASSERT_TRUE(isJamo(L'ㄱ'));
-  ASSERT_TRUE(isJamo(L'ㅣ'));
-  ASSERT_TRUE(isJamo(L'ㅏ'));
-  ASSERT_FALSE(isJamo(L'가'));
-  ASSERT_FALSE(isJamo(L'힣'));
-  ASSERT_FALSE(isJamo(L'와'));
+  ASSERT_TRUE(converter.isJamo(L'ㄱ'));
+  ASSERT_TRUE(converter.isJamo(L'ㅣ'));
+  ASSERT_TRUE(converter.isJamo(L'ㅏ'));
+  ASSERT_FALSE(converter.isJamo(L'가'));
+  ASSERT_FALSE(converter.isJamo(L'힣'));
+  ASSERT_FALSE(converter.isJamo(L'와'));
 
   // is chosung
-  ASSERT_TRUE(isChosung(L'ㅉ'));
-  ASSERT_FALSE(isChosung(L'ㄽ'));
-  ASSERT_FALSE(isChosung(L'ㅣ'));
+  ASSERT_TRUE(converter.isChosung(L'ㅉ'));
+  ASSERT_FALSE(converter.isChosung(L'ㄽ'));
+  ASSERT_FALSE(converter.isChosung(L'ㅣ'));
 
   // is jungsung
-  ASSERT_TRUE(isJungsung(L'ㅣ'));
-  ASSERT_FALSE(isJungsung(L'ㄽ'));
-  ASSERT_FALSE(isJungsung(L'ㅉ'));
+  ASSERT_TRUE(converter.isJungsung(L'ㅣ'));
+  ASSERT_FALSE(converter.isJungsung(L'ㄽ'));
+  ASSERT_FALSE(converter.isJungsung(L'ㅉ'));
 
   // is jongsung
-  ASSERT_TRUE(isJongsung(L'ㄽ'));
-  ASSERT_FALSE(isJongsung(L'ㅣ'));
-  ASSERT_FALSE(isJongsung(L'ㅉ'));
+  ASSERT_TRUE(converter.isJongsung(L'ㄽ'));
+  ASSERT_FALSE(converter.isJongsung(L'ㅣ'));
+  ASSERT_FALSE(converter.isJongsung(L'ㅉ'));
 }
 
 TEST(jamo, testGetOneHangulFromJamo) {
