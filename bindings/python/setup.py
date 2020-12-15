@@ -4,7 +4,7 @@ from setuptools import setup, Extension
 fasthangul_jamo = Extension(
     "fasthangul.jamo",
     sources=["fasthangul/jamo.cc"],
-    include_dirs=["./include"],
+    include_dirs=["../../include"],
     extra_compile_args=["-std=c++17"],
     language="c++",
 )
